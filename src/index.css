@@ -1,0 +1,22 @@
+@import "tailwindcss";
+/* Habitree - Main Design Tokens */
+:root {
+  --brand: #8d425c;
+  --brand-dark: #6e2948;
+  --accent: #4a639d;
+  --surface-soft: #e7d3d7;
+  --muted: #ad9ca1;
+  --background: #fffcf9;
+
+  --font-primary: "Vazirmatn Variable", sans-serif;
+}
+
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-accent: var(--accent);
+  --color-surface-soft: var(--surface-soft);
+  --color-muted: var(--muted);
+  --color-background: var(--background);
+  --font-sans: var(--font-primary);
+}
