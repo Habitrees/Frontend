@@ -20,3 +20,135 @@
   --color-background: var(--background);
   --font-sans: var(--font-primary);
 }
+
+/* Login semantic tokens sampled from the original design. Existing brand tokens remain shared. */
+:root {
+  --login-primary: #7d485c;
+  --login-text: #373034;
+  --login-muted: #7b7075;
+  --input-surface: #ffffff;
+  --input-border: #e2dada;
+  --input-placeholder: #78686f;
+  --on-primary: #ffffff;
+  --feedback-error: #a12d47;
+  --reassurance: #737f6b;
+  --botanical-heading: #6c3e50;
+  --botanical-copy: #6b5660;
+  --botanical-start: #efe9e5;
+  --botanical-end: #dfd2d6;
+  --login-button-shadow: 0 8px 16px rgb(100 57 74 / 13%);
+}
+
+@theme inline {
+  --color-login-primary: var(--login-primary);
+  --color-login-text: var(--login-text);
+  --color-login-muted: var(--login-muted);
+  --color-input-surface: var(--input-surface);
+  --color-input-border: var(--input-border);
+  --color-input-placeholder: var(--input-placeholder);
+  --color-on-primary: var(--on-primary);
+  --color-feedback-error: var(--feedback-error);
+  --color-reassurance: var(--reassurance);
+  --color-botanical-heading: var(--botanical-heading);
+  --color-botanical-copy: var(--botanical-copy);
+  --shadow-login-button: var(--login-button-shadow);
+}
+
+@theme {
+  --text-login-heading-mobile: 1.6875rem;
+  --text-login-heading: 2rem;
+  --text-login-heading--line-height: 1.6;
+  --text-panel-heading: 2.25rem;
+  --text-panel-heading--line-height: 1.65;
+  --text-wordmark: 1.4375rem;
+  --text-wordmark--line-height: 1.5;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.9;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.6;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.8;
+  --text-fine: 0.75rem;
+  --text-fine--line-height: 1.6;
+}
+
+@layer base {
+  body { min-width: 320px; }
+  button:not(:disabled), a { cursor: pointer; }
+  :where(a, button):focus-visible {
+    outline: 2px solid var(--login-primary);
+    outline-offset: 4px;
+  }
+}
+
+@layer components {
+  .login-shell {
+    display: flex;
+    min-height: 100dvh;
+    padding: 24px;
+    gap: 48px;
+  }
+  .botanical-panel {
+    flex: 0 0 38%;
+    min-height: calc(100dvh - 48px);
+    background: linear-gradient(90deg, var(--botanical-start), var(--botanical-end));
+  }
+  .botanical-art { width: 440px; max-width: 100%; height: auto; aspect-ratio: 1; margin-top: 16px; opacity: 0.85; }
+  .login-area {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    padding: 27px 48px 20px;
+  }
+  .login-form-slot {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding-block: 56px;
+  }
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .login-shell { gap: 24px; }
+    .login-area { padding-inline: 24px; }
+    .botanical-panel { flex-basis: 40%; }
+  }
+  @media (max-width: 1023px) {
+    .login-area { min-height: calc(100dvh - 48px); padding: 20px 48px; }
+  }
+  @media (max-width: 639px) {
+    .login-shell { padding: 0; }
+    .login-area { min-height: 100dvh; padding: 24px 20px 18px; }
+    .login-form-slot { padding-block: 64px; }
+  }
+}
+
+@layer components {
+  .recovery-form-slot {
+    position: relative;
+    align-items: flex-start;
+    padding-top: 148px;
+  }
+  .recovery-simulation-notice {
+    position: absolute;
+    top: 24px;
+    inset-inline: 0;
+    max-width: 440px;
+    margin-inline: auto;
+  }
+  .otp-row {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: clamp(8px, 1.4vw, 20px);
+    padding-left: 12px;
+  }
+  @media (max-width: 1023px) {
+    .recovery-form-slot { padding-top: 80px; }
+    .recovery-form-slot:has(.recovery-simulation-notice) { padding-top: 148px; }
+  }
+  @media (max-width: 639px) {
+    .otp-row { padding-left: 0; }
+  }
+}
