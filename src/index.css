@@ -1,5 +1,6 @@
 @import "tailwindcss";
-/* Habitree - Main Design Tokens */
+
+/* Brand and semantic design tokens: keep visual values centralized here. */
 :root {
   --brand: #8d425c;
   --brand-dark: #6e2948;
@@ -7,8 +8,31 @@
   --surface-soft: #e7d3d7;
   --muted: #ad9ca1;
   --background: #fffcf9;
-
   --font-primary: "Vazirmatn Variable", sans-serif;
+
+  --login-primary: #7d485c;
+  --login-text: #373034;
+  --login-muted: #7b7075;
+  --input-surface: #ffffff;
+  --input-border: #e2dada;
+  --input-placeholder: #78686f;
+  --on-primary: #ffffff;
+  --feedback-error: #a12d47;
+  --reassurance: #176b3a;
+  --botanical-heading: #6c3e50;
+  --botanical-copy: #6b5660;
+  --botanical-start: #efe9e5;
+  --botanical-end: #dfd2d6;
+  --registration-botanical-start: #f5ebe7;
+  --registration-botanical-mid: #eddedf;
+  --registration-botanical-end: #e7d3d7;
+  --registration-panel-title: #75354c;
+  --registration-panel-copy: #8d6f79;
+  --login-button-shadow: 0 8px 16px rgb(100 57 74 / 13%);
+  --registration-button-shadow: 0 8px 16px rgb(141 66 92 / 13%);
+
+  --auth-page-inset: clamp(12px, 1.75vw, 24px);
+  --auth-layout-gap: clamp(18px, 3vw, 48px);
 }
 
 @theme inline {
@@ -19,27 +43,7 @@
   --color-muted: var(--muted);
   --color-background: var(--background);
   --font-sans: var(--font-primary);
-}
 
-/* Login semantic tokens sampled from the original design. Existing brand tokens remain shared. */
-:root {
-  --login-primary: #7d485c;
-  --login-text: #373034;
-  --login-muted: #7b7075;
-  --input-surface: #ffffff;
-  --input-border: #e2dada;
-  --input-placeholder: #78686f;
-  --on-primary: #ffffff;
-  --feedback-error: #a12d47;
-  --reassurance: #737f6b;
-  --botanical-heading: #6c3e50;
-  --botanical-copy: #6b5660;
-  --botanical-start: #efe9e5;
-  --botanical-end: #dfd2d6;
-  --login-button-shadow: 0 8px 16px rgb(100 57 74 / 13%);
-}
-
-@theme inline {
   --color-login-primary: var(--login-primary);
   --color-login-text: var(--login-text);
   --color-login-muted: var(--login-muted);
@@ -51,29 +55,34 @@
   --color-reassurance: var(--reassurance);
   --color-botanical-heading: var(--botanical-heading);
   --color-botanical-copy: var(--botanical-copy);
+  --color-registration-panel-title: var(--registration-panel-title);
+  --color-registration-panel-copy: var(--registration-panel-copy);
   --shadow-login-button: var(--login-button-shadow);
+  --shadow-registration-button: var(--registration-button-shadow);
 }
 
 @theme {
   --text-login-heading-mobile: 1.6875rem;
   --text-login-heading: 2rem;
-  --text-login-heading--line-height: 1.6;
-  --text-panel-heading: 2.25rem;
-  --text-panel-heading--line-height: 1.65;
+  --text-login-heading--line-height: 1.45;
+  --text-panel-heading: 2.125rem;
+  --text-panel-heading--line-height: 1.45;
   --text-wordmark: 1.4375rem;
   --text-wordmark--line-height: 1.5;
   --text-body: 0.9375rem;
-  --text-body--line-height: 1.9;
+  --text-body--line-height: 1.7;
   --text-label: 0.875rem;
-  --text-label--line-height: 1.6;
+  --text-label--line-height: 1.55;
   --text-caption: 0.8125rem;
-  --text-caption--line-height: 1.8;
+  --text-caption--line-height: 1.6;
   --text-fine: 0.75rem;
-  --text-fine--line-height: 1.6;
+  --text-fine--line-height: 1.5;
 }
 
 @layer base {
-  body { min-width: 320px; }
+  html { min-width: 320px; }
+  body { min-width: 320px; min-height: 100svh; }
+  #root { min-height: 100svh; }
   button:not(:disabled), a { cursor: pointer; }
   :where(a, button):focus-visible {
     outline: 2px solid var(--login-primary);
@@ -84,71 +93,201 @@
 @layer components {
   .login-shell {
     display: flex;
-    min-height: 100dvh;
-    padding: 24px;
-    gap: 48px;
+    width: 100%;
+    height: 100svh;
+    min-height: 680px;
+    overflow: hidden;
+    padding: var(--auth-page-inset);
+    gap: var(--auth-layout-gap);
   }
+
   .botanical-panel {
     flex: 0 0 38%;
-    min-height: calc(100dvh - 48px);
+    height: 100%;
+    min-height: 0;
     background: linear-gradient(90deg, var(--botanical-start), var(--botanical-end));
   }
-  .botanical-art { width: 440px; max-width: 100%; height: auto; aspect-ratio: 1; margin-top: 16px; opacity: 0.85; }
+
+  .botanical-copy-block {
+    padding-top: clamp(20px, 4.5vh, 56px);
+  }
+
+  .botanical-art {
+    width: min(100%, clamp(220px, 43vh, 360px));
+    max-width: 100%;
+    max-height: 43vh;
+    height: auto;
+    aspect-ratio: 1;
+    margin-top: clamp(8px, 1.8vh, 16px);
+    opacity: 0.85;
+  }
+
+  .registration-botanical-panel {
+    background: linear-gradient(90deg, var(--registration-botanical-start) 0%, var(--registration-botanical-mid) 55%, var(--registration-botanical-end) 100%);
+  }
+
+  .registration-botanical-panel .botanical-art { opacity: 1; }
+
   .login-area {
     display: flex;
     flex: 1;
     min-width: 0;
+    min-height: 0;
+    height: 100%;
     flex-direction: column;
     align-items: center;
-    padding: 27px 48px 20px;
+    padding: clamp(12px, 2vh, 24px) clamp(16px, 3.3vw, 48px) clamp(12px, 1.6vh, 18px);
   }
+
   .login-form-slot {
     display: flex;
     flex: 1;
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding-block: 56px;
+    min-height: 0;
+    padding-block: clamp(8px, 1.6vh, 20px);
   }
-  @media (min-width: 1024px) and (max-width: 1279px) {
-    .login-shell { gap: 24px; }
-    .login-area { padding-inline: 24px; }
-    .botanical-panel { flex-basis: 40%; }
-  }
-  @media (max-width: 1023px) {
-    .login-area { min-height: calc(100dvh - 48px); padding: 20px 48px; }
-  }
-  @media (max-width: 639px) {
-    .login-shell { padding: 0; }
-    .login-area { min-height: 100dvh; padding: 24px 20px 18px; }
-    .login-form-slot { padding-block: 64px; }
-  }
-}
 
-@layer components {
+  .registration-simulation-notice {
+    max-width: 440px;
+    margin-inline: auto;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.7rem;
+    line-height: 1.45;
+  }
+
   .recovery-form-slot {
     position: relative;
-    align-items: flex-start;
-    padding-top: 148px;
+    align-items: center;
+    padding-block: clamp(16px, 2vh, 24px);
   }
+
   .recovery-simulation-notice {
     position: absolute;
-    top: 24px;
+    top: 0;
     inset-inline: 0;
     max-width: 440px;
     margin-inline: auto;
   }
+
+  .recovery-form-slot:has(.recovery-simulation-notice) {
+    padding-top: clamp(64px, 9vh, 84px);
+  }
+
   .otp-row {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: clamp(8px, 1.4vw, 20px);
     padding-left: 12px;
   }
+
+
+  .password-requirements .is-met {
+    color: var(--reassurance);
+    font-weight: 600;
+  }
+
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .login-shell { gap: 24px; }
+    .login-area { padding-inline: 24px; }
+    .botanical-panel { flex-basis: 40%; }
+  }
+
   @media (max-width: 1023px) {
-    .recovery-form-slot { padding-top: 80px; }
-    .recovery-form-slot:has(.recovery-simulation-notice) { padding-top: 148px; }
+    .login-shell {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 100svh;
+      overflow: visible;
+      padding: clamp(16px, 3vw, 24px);
+    }
+
+    .botanical-panel { display: none; }
+
+    .login-area {
+      width: 100%;
+      height: auto;
+      min-height: calc(100svh - clamp(16px, 3vw, 24px) - clamp(16px, 3vw, 24px));
+      padding: clamp(16px, 3vh, 28px) clamp(20px, 6vw, 56px);
+    }
+
+    .login-form-slot { padding-block: clamp(24px, 5vh, 40px); }
+    .recovery-form-slot:has(.recovery-simulation-notice) { padding-top: 76px; }
   }
+
   @media (max-width: 639px) {
-    .otp-row { padding-left: 0; }
+    .login-shell {
+      height: auto;
+      min-height: 100svh;
+      overflow: visible;
+      padding: 0;
+    }
+
+    .login-area {
+      min-height: 100svh;
+      padding: 20px 16px 16px;
+    }
+
+    .login-form-slot { padding-block: clamp(24px, 5vh, 36px); }
+    .recovery-form-slot:has(.recovery-simulation-notice) { padding-top: 76px; }
+    .otp-row { gap: 8px; padding-left: 0; }
   }
+
+  /* Standard desktop/laptop heights (>= 681px) stay inside the viewport. */
+  @media (min-width: 1024px) and (max-height: 800px) {
+    .login-area { padding-block: 8px; }
+    .login-form-slot { padding-block: 4px; }
+    .botanical-copy-block { padding-top: clamp(14px, 2.6vh, 22px); }
+    .botanical-art {
+      width: min(100%, 34vh);
+      max-height: 34vh;
+      margin-top: 6px;
+    }
+    .register-details-form { gap: clamp(6px, 0.9vh, 9px); }
+    .register-details-fields { gap: clamp(5px, 0.75vh, 8px); }
+    .register-details-form .auth-input-control { height: 44px; }
+    .register-details-form .register-submit-button { height: 46px; }
+  }
+
+  /* Very short desktop windows may scroll naturally rather than clipping content. */
+  @media (min-width: 1024px) and (max-height: 680px) {
+    .login-shell {
+      height: auto;
+      min-height: 100svh;
+      overflow: visible;
+    }
+    .botanical-panel { height: auto; min-height: calc(100svh - 2 * var(--auth-page-inset)); }
+    .login-area { height: auto; min-height: calc(100svh - 2 * var(--auth-page-inset)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; }
+  }
+}
+
+/* Unlayered component sizing overrides keep compact desktop auth forms stable. */
+.register-details-form .auth-input-control {
+  height: clamp(44px, 6vh, 50px);
+}
+.register-details-form .register-submit-button {
+  height: clamp(46px, 6vh, 50px);
+}
+@media (min-width: 1024px) and (max-height: 800px) {
+  .register-details-form .auth-input-control { height: 46px; }
+  .register-details-form .register-submit-button { height: 46px; }
+}
+
+
+/* Keep satisfied password rules visibly green above Tailwind component utilities. */
+.password-requirements .is-met {
+  color: var(--reassurance);
+  font-weight: 700;
+}
+
+.password-requirements .is-met svg {
+  color: var(--reassurance);
+  stroke: currentColor;
 }
