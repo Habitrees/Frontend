@@ -29,3 +29,9 @@ test-results/
 coverage/
 node_modules/
 dist/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+!.env.*.example
