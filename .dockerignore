@@ -1,45 +1,37 @@
 # Dependencies
-
 node_modules
-\*\*/node_modules
+**/node_modules
 
 # Build output
-
 dist
-\*\*/dist
+**/dist
 dist-ssr
 
 # Git
-
 .git
 .gitignore
 
 # IDE
-
 .vscode
 .idea
 
 # Tests and reports
-
 playwright-report
 test-results
 coverage
 
 # Logs
-
-_.log
-npm-debug.log_
+*.log
+npm-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Local environment files
-
+# Environment files
 .env
-.env._
+.env.*
 **/.env
-**/.env._
+**/.env.*
 
 # Local files
-
-_.local
-\*\*/_.local
+*.local
+**/*.local
