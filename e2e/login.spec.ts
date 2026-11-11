@@ -92,8 +92,9 @@ for (const viewport of [
     const formBox = await form.boundingBox();
     expect(formBox).not.toBeNull();
     expect(formBox!.width).toBeLessThanOrEqual(440);
-    expect(formBox!.x).toBeGreaterThanOrEqual(20);
-    expect(formBox!.x + formBox!.width).toBeLessThanOrEqual(viewport.width - 20);
+    // The mobile layout intentionally uses 16px horizontal gutters.
+    expect(formBox!.x).toBeGreaterThanOrEqual(16);
+    expect(formBox!.x + formBox!.width).toBeLessThanOrEqual(viewport.width - 16);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     // The botanical panel yields its space to the form below the desktop breakpoint.
     const panel = page.locator(".botanical-panel");

@@ -157,7 +157,7 @@ test("recovery OTP uses backend expiry and resend deadlines and blocks expired c
   await expect(resend).toBeEnabled();
   await page.clock.fastForward(1000);
   await expect(page.getByRole("timer")).toContainText("زمان اعتبار کد تمام شد");
-  await expect(page.getByRole("button", { name: "تایید و ادامه", exact: true })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "تأیید و ادامه", exact: true })).toBeDisabled();
   await expect(page.getByRole("textbox", { name: "رقم 1 کد پیامکی" })).toHaveAttribute("readonly", "");
   expect(verifyCount).toBe(0);
 

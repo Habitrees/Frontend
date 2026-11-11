@@ -26,7 +26,7 @@ export default function RegisterOtpPage() {
   if (registration.stage.step === "details") return <Navigate to="/register/details" replace />;
 
   async function submitCode(code: string) {
-    if (!/^\\d{6}$/.test(code)) {
+    if (!/^\d{6}$/.test(code)) {
       setCodeError("کد شش‌رقمی را کامل وارد کن.");
       return;
     }

@@ -8,7 +8,9 @@ async function completeDetails(page: Page) {
   await page.getByLabel("شناسه کاربری", { exact: true }).fill("habitree123");
   await page.getByLabel("رمز عبور", { exact: true }).fill("habitree123");
   await page.getByLabel("تکرار رمز عبور", { exact: true }).fill("habitree123");
-  await page.getByRole("checkbox").check();
+  const termsCheckbox = page.getByRole("checkbox");
+  await page.getByText("با قوانین habitree و حریم خصوصی موافقم.", { exact: true }).click();
+  await expect(termsCheckbox).toBeChecked();
 }
 
 test("registration verifies OTP before details and sends only a registration token during completion", async ({ page }) => {
@@ -116,7 +118,6 @@ test("wrong OTP never reaches details; retry succeeds only after server approval
   await page.getByLabel("شماره موبایل", { exact: true }).fill("09123456789");
   await page.getByRole("button", { name: "ارسال کد تأیید" }).click();
   await page.getByRole("textbox", { name: "رقم 1 کد پیامکی" }).fill("111111");
-  await expect(page.getByRole("alert")).toContainText("کد تأیید اشتباه");
   await expect(page.getByRole("alert")).toContainText("کد تأیید اشتباه");
   expect(completed).toHaveLength(0);
   await page.getByRole("textbox", { name: "رقم 1 کد پیامکی" }).fill("072617");

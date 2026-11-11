@@ -99,9 +99,11 @@ export function useRegistrationController(service: RegistrationService = registr
       setRequest({ status: "error", message: "مهلت تکمیل ثبت‌نام تمام شده است. برای دریافت کد جدید از ابتدا شروع کن." });
       return false;
     }
+    // Keep the verified details stage until the page navigates to Login.
+    // Resetting to "phone" here races RegisterDetailsPage's route guard, which
+    // redirects back to /register before the success navigation can complete.
     return run(async () => {
       await service.completeRegistration({ ...input, registrationToken: currentStage.registrationToken });
-      setStage({ step: "phone" });
     });
   }
 

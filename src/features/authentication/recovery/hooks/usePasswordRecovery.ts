@@ -76,7 +76,9 @@ export function useRecoveryController(service: PasswordRecoveryService = passwor
     }
     return run(async () => {
       await service.resetPassword({ newPassword, confirmPassword }, currentGrant);
-      setStage({ step: "phone" });
+      // Keep the verified stage until the page navigates to Login.
+      // Resetting it here races with ResetPasswordPage's route transition
+      // and redirects the user back to /forgot-password.
     });
   }
 
