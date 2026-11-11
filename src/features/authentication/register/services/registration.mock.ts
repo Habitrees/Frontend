@@ -1,23 +1,25 @@
 import type { RegistrationAdapter } from "./registration.service";
 import { RegistrationError } from "./registration.service";
 
-/** Explicit local-only flow. It never calls the API or creates a real account. */
+/** Explicit development-only simulation; no SMS or account creation. */
 export const developmentRegistrationAdapter: RegistrationAdapter = {
   async requestCode(client, input) {
-    void client;
-    return { context: { mobile: input.mobile } };
+    void client; void input;
+    return { expiresIn: 300, resendAfter: 60 };
   },
-  async verifyCode(client, input, challenge) {
+  async verifyCode(client, input) {
     void client;
     if (input.code !== "123456") {
       throw new RegistrationError("کد واردشده صحیح نیست. در حالت آزمایشی از کد ۱۲۳۴۵۶ استفاده کن.");
     }
-    return { context: challenge.context };
+    return { registrationToken: "local-preview-only", expiresIn: 300 };
   },
-  async completeRegistration(client, input, grant) {
+  async completeRegistration(client, input) {
     void client;
-    void input;
-    void grant;
-    return { backendResult: { simulated: true } };
+    return {
+      user: {
+        id: 0, phone: "09123456789", username: input.username, fullName: input.fullName,
+      },
+    };
   },
 };

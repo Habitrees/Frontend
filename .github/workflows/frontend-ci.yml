@@ -3,9 +3,7 @@ name: Frontend CI
 on:
   push:
     branches:
-      - main
-      - develop
-      - chore/frontend-setup
+      - "**"
   pull_request:
     branches:
       - main
@@ -14,6 +12,9 @@ on:
 jobs:
   frontend-checks:
     runs-on: ubuntu-latest
+    env:
+      VITE_ENABLE_AUTH_REGISTRATION_MOCK: "false"
+      VITE_ENABLE_AUTH_RECOVERY_MOCK: "false"
 
     steps:
       - name: Checkout repository
@@ -39,3 +40,14 @@ jobs:
 
       - name: Run E2E tests
         run: npm run test:e2e
+
+      - name: Upload Playwright report and failure artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-playwright-results
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7

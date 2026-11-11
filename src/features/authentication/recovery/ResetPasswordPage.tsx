@@ -30,8 +30,8 @@ export default function ResetPasswordPage() {
     return <Navigate to={recovery.stage.step === "code" ? "/verify-reset-code" : "/forgot-password"} replace />;
   }
 
-  const submit = form.handleSubmit(async ({ newPassword }) => {
-    if (await recovery.resetPassword(newPassword)) {
+  const submit = form.handleSubmit(async ({ newPassword, confirmPassword }) => {
+    if (await recovery.resetPassword(newPassword, confirmPassword)) {
       form.reset();
       navigate("/login", {
         replace: true,

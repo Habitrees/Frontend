@@ -47,11 +47,12 @@ export default function RegisterDetailsPage() {
   if (registration.stage.step === "phone") return <Navigate to="/register" replace />;
   if (registration.stage.step === "code") return <Navigate to="/register/verify-code" replace />;
 
-  const submit = form.handleSubmit(async ({ fullName, username, password, acceptTerms }) => {
+  const submit = form.handleSubmit(async ({ fullName, username, password, confirmPassword, acceptTerms }) => {
     if (await registration.completeRegistration({
       fullName: fullName.trim(),
       username: username.trim(),
       password,
+      confirmPassword,
       termsAccepted: acceptTerms,
     })) {
       form.reset();
@@ -87,6 +88,15 @@ export default function RegisterDetailsPage() {
               رشدت را شروع کن
             </h1>
             <p className="mt-1 text-body text-login-muted">اولین قدم برای روزهای سبزتر، همین‌جاست.</p>
+            <button
+              type="button"
+              className="mt-1 text-caption font-semibold text-login-primary underline underline-offset-4 hover:text-brand-dark"
+              onClick={() => {
+                if (registration.editCode()) navigate("/register");
+              }}
+            >
+              دریافت کد تأیید جدید
+            </button>
           </div>
 
           <div className="register-details-fields flex flex-col gap-[clamp(0.5rem,1.05vh,0.8rem)]">

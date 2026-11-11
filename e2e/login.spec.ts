@@ -9,25 +9,46 @@ test("login validates required fields and focuses the first invalid input", asyn
   await expect(page.getByLabel("شماره موبایل", { exact: true })).toHaveAttribute("aria-invalid", "true");
 });
 
-test("invalid phones are rejected; Persian digits reach the honest unconfigured service", async ({ page }) => {
-  const apiRequests: string[] = [];
-  page.on("request", (request) => { if (new URL(request.url()).pathname.startsWith("/api")) apiRequests.push(request.url()); });
+test("login normalizes phone, posts to Django and stores no JWT in web storage", async ({ page }) => {
+  const loginBodies: unknown[] = [];
+  await page.route("**/api/auth/login/", async (route) => {
+    loginBodies.push(route.request().postDataJSON());
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({
+      detail: "ok", user: { id: 17, phone: "+989123456789", username: "habitree123", full_name: "کاربر آزمایشی" },
+      access: "mock-access-for-test-only",
+    }) });
+  });
   await page.goto("/login");
-  const mobile = page.getByLabel("شماره موبایل", { exact: true });
-  await mobile.fill("123");
-  await page.getByLabel("رمز عبور", { exact: true }).fill("a");
+  const phone = page.getByLabel("شماره موبایل", { exact: true });
+  await phone.fill("123");
+  await page.getByLabel("رمز عبور", { exact: true }).fill("some-password");
   await page.getByRole("button", { name: "ورود به habitree", exact: true }).click();
   await expect(page.getByText(/شماره موبایل معتبر نیست/)).toBeVisible();
-  await mobile.fill("۰۹۱۲۳۴۵۶۷۸۹");
+  expect(loginBodies).toEqual([]);
+
+  await phone.fill("۰۹۱۲۳۴۵۶۷۸۹");
   await page.getByRole("button", { name: "ورود به habitree", exact: true }).click();
-  await expect(page.getByRole("alert")).toHaveText("ورود هنوز فعال نشده؛ لطفاً کمی بعد دوباره تلاش کن.");
-  await expect(page.getByRole("button", { name: "ورود به habitree", exact: true })).toBeEnabled();
-  await expect(page.getByText("ورود انجام شد.", { exact: true })).toHaveCount(0);
-  expect(apiRequests).toEqual([]);
-  await mobile.fill("٠٩١٢٣٤٥٦٧٨٩");
-  await expect(page.getByRole("alert")).toHaveCount(0);
+  await expect(page.getByRole("status")).toHaveText("ورود انجام شد.");
+  expect(loginBodies).toEqual([{ phone: "09123456789", password: "some-password" }]);
+  expect(await page.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length }))).toEqual({ local: 0, session: 0 });
+});
+
+test("login handles wrong credentials and rate limiting without false success", async ({ page }) => {
+  let requests = 0;
+  await page.route("**/api/auth/login/", async (route) => {
+    requests++;
+    await route.fulfill({
+      status: requests === 1 ? 400 : 429, contentType: "application/json", body: JSON.stringify({ detail: "error" }),
+    });
+  });
+  await page.goto("/login");
+  await page.getByLabel("شماره موبایل", { exact: true }).fill("09123456789");
+  await page.getByLabel("رمز عبور", { exact: true }).fill("incorrect-password");
   await page.getByRole("button", { name: "ورود به habitree", exact: true }).click();
-  await expect(page.getByRole("alert")).toContainText("ورود هنوز فعال نشده");
+  await expect(page.getByRole("alert")).toContainText("شماره موبایل یا رمز عبور صحیح نیست");
+  await page.getByRole("button", { name: "ورود به habitree", exact: true }).click();
+  await expect(page.getByRole("alert")).toContainText("تعداد تلاش‌های ورود");
+  await expect(page.getByRole("status")).toHaveCount(0);
 });
 
 test("password visibility, remember preference, and registration notice are accessible", async ({ page }) => {
@@ -40,13 +61,11 @@ test("password visibility, remember preference, and registration notice are acce
   await expect(page.getByRole("button", { name: "پنهان کردن رمز عبور", exact: true })).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "پنهان کردن رمز عبور", exact: true }).click();
   await expect(password).toHaveAttribute("type", "password");
-  const remember = page.getByRole("checkbox", { name: "مرا به خاطر بسپار" });
-  await expect(remember).toBeChecked();
-  await remember.focus();
-  await page.keyboard.press("Space");
+  const remember = page.getByRole("checkbox", { name: "مرا به خاطر بسپار (به‌زودی)" });
+  await expect(remember).toBeDisabled();
   await expect(remember).not.toBeChecked();
-  await page.getByRole("button", { name: "ثبت‌نام کن", exact: true }).click();
-  await expect(page.getByRole("status")).toHaveText("ثبت‌نام هنوز فعال نشده است.");
+  await page.getByRole("link", { name: "ثبت‌نام کن", exact: true }).click();
+  await expect(page).toHaveURL(/\/register$/);
   expect(await page.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length }))).toEqual({ local: 0, session: 0 });
 });
 

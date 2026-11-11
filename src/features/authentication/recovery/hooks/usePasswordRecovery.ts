@@ -43,18 +43,40 @@ export function useRecoveryController(service: PasswordRecoveryService = passwor
     });
   }
 
+  async function resendCode(): Promise<boolean> {
+    if (stage.step !== "code") return false;
+    const currentChallenge = stage.challenge;
+    if (Date.now() < currentChallenge.resendAt) return false;
+
+    return run(async () => {
+      const challenge = await service.requestCode({ mobile: currentChallenge.mobile });
+      setStage({ step: "code", challenge });
+    });
+  }
+
   async function verifyCode(code: string) {
     if (stage.step !== "code") return false;
+    const currentChallenge = stage.challenge;
+    if (Date.now() >= currentChallenge.expiresAt) {
+      setRequest({ status: "error", message: "مهلت اعتبار کد تمام شده است؛ لطفاً کد جدید درخواست کن." });
+      return false;
+    }
     return run(async () => {
-      const grant = await service.verifyCode({ code }, stage.challenge);
+      const grant = await service.verifyCode({ code }, currentChallenge);
       setStage({ step: "password", grant });
     });
   }
 
-  async function resetPassword(newPassword: string) {
+  async function resetPassword(newPassword: string, confirmPassword: string) {
     if (stage.step !== "password") return false;
+    const currentGrant = stage.grant;
+    if (currentGrant.expiresAt !== undefined && Date.now() >= currentGrant.expiresAt) {
+      setRequest({ status: "error", message: "مهلت تغییر رمز تمام شده است؛ فرایند بازیابی را دوباره شروع کن." });
+      return false;
+    }
     return run(async () => {
-      await service.resetPassword({ newPassword }, stage.grant);
+      await service.resetPassword({ newPassword, confirmPassword }, currentGrant);
+      setStage({ step: "phone" });
     });
   }
 
@@ -62,7 +84,10 @@ export function useRecoveryController(service: PasswordRecoveryService = passwor
     if (!submitting.current) setRequest({ status: "idle" });
   }
 
-  return { stage, request, simulated: service.simulated, requestCode, verifyCode, resetPassword, clearError };
+  return {
+    stage, request, simulated: service.simulated, requestCode, resendCode,
+    verifyCode, resetPassword, clearError,
+  };
 }
 
 type RecoveryController = ReturnType<typeof useRecoveryController>;

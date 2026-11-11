@@ -19,26 +19,38 @@ function recognized(context: unknown, values: WeakSet<object>): context is objec
 }
 
 export const developmentRecoveryAdapter: PasswordRecoveryAdapter = {
-  async requestCode() {
+  async requestCode(_client, input) {
     await simulateLatency();
     const context = {};
-    const challenge: RecoveryChallenge = { context };
+    const now = Date.now();
+    const challenge: RecoveryChallenge = {
+      mobile: input.mobile,
+      expiresAt: now + 5 * 60 * 1000,
+      resendAt: now + 60 * 1000,
+      context,
+    };
     challenges.add(context);
     return challenge;
   },
   async verifyCode(_client, input, challenge) {
     await simulateLatency();
-    if (!recognized(challenge.context, challenges)) throw new PasswordRecoveryError("درخواست آزمایشی منقضی شده؛ دوباره شروع کن.");
-    if (input.code !== "123456") throw new PasswordRecoveryError("کد آزمایشی درست نیست؛ کد ۱۲۳۴۵۶ را وارد کن.");
+    if (!recognized(challenge.context, challenges)) {
+      throw new PasswordRecoveryError("درخواست آزمایشی منقضی شده؛ دوباره شروع کن.");
+    }
+    if (input.code !== "123456") {
+      throw new PasswordRecoveryError("کد آزمایشی درست نیست؛ کد ۱۲۳۴۵۶ را وارد کن.");
+    }
     challenges.delete(challenge.context);
     const context = {};
-    const grant: RecoveryGrant = { context };
+    const grant: RecoveryGrant = { context, expiresAt: Date.now() + 5 * 60 * 1000 };
     grants.add(context);
     return grant;
   },
   async resetPassword(_client, _input, grant) {
     await simulateLatency();
-    if (!recognized(grant.context, grants)) throw new PasswordRecoveryError("تأیید آزمایشی منقضی شده؛ دوباره شروع کن.");
+    if (!recognized(grant.context, grants)) {
+      throw new PasswordRecoveryError("تأیید آزمایشی منقضی شده؛ دوباره شروع کن.");
+    }
     grants.delete(grant.context);
     // Deliberately discard the password. Nothing is changed, logged, or persisted.
   },

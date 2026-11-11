@@ -1,0 +1,28 @@
+HABITREE — Registration API integration patch
+
+Apply:
+1. Extract this ZIP into your existing Frontend directory.
+2. Allow the listed files to be overwritten.
+3. Do NOT replace your .git folder, node_modules, dist, or your own .env.local file.
+
+Local setup (PowerShell, from Frontend):
+    Copy-Item .env.example .env.local
+    npm ci
+    npm run dev
+
+The defaults expect Django to be reachable from the host at http://127.0.0.1:8000,
+with its API under /api. The backend container must publish host port 8000. If it
+uses another host port, change VITE_API_PROXY_TARGET in Frontend/.env.local and
+restart Vite.
+
+Run checks locally:
+    npm run build
+    npm run lint
+    npm run test:e2e
+
+Registration behavior:
+- Send OTP: POST /api/auth/register/send-otp/
+- Verify OTP + create account: POST /api/auth/register/verify-otp/
+- OTP is kept in memory and sent with the account fields in the final request.
+- Returned JSON JWTs are not persisted in browser storage. HttpOnly/Secure cookie
+  sessions require corresponding backend Set-Cookie, CORS, CSRF, login, and refresh work.

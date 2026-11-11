@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { useForm } from "react-hook-form";
 import { normalizePhone } from "../../../../shared/utils/phone";
-import { authenticationService, AuthenticationNotConfiguredError } from "../services/login.service";
+import { authenticationService, LoginError } from "../services/login.service";
 import type { AuthenticationResult, AuthenticationService, LoginCredentials } from "../services/login.types";
 
 type LoginState =
@@ -17,7 +17,6 @@ export function useLogin(service: AuthenticationService = authenticationService)
     mode: "onSubmit",
     reValidateMode: "onChange",
   });
-  const [rememberMe, setRememberMe] = useState(true);
   const [state, setState] = useState<LoginState>({ status: "idle" });
   const submitting = useRef(false);
 
@@ -29,14 +28,14 @@ export function useLogin(service: AuthenticationService = authenticationService)
       try {
         const result = await service.login(
           { ...values, mobile: normalizePhone(values.mobile) },
-          { rememberMe },
+          { rememberMe: false },
         );
         setState({ status: "success", result });
       } catch (error: unknown) {
         setState({
           status: "error",
-          message: error instanceof AuthenticationNotConfiguredError
-            ? "ورود هنوز فعال نشده؛ لطفاً کمی بعد دوباره تلاش کن."
+          message: error instanceof LoginError
+            ? error.message
             : "ورود انجام نشد. لطفاً دوباره تلاش کن.",
         });
       } finally {
@@ -49,5 +48,5 @@ export function useLogin(service: AuthenticationService = authenticationService)
     if (state.status !== "loading") setState({ status: "idle" });
   }
 
-  return { form, state, rememberMe, setRememberMe, submit, clearFeedback };
+  return { form, state, submit, clearFeedback };
 }

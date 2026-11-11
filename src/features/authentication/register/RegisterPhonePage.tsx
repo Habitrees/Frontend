@@ -57,7 +57,7 @@ export default function RegisterPhonePage() {
               error={form.formState.errors.mobile?.message}
               {...form.register("mobile", { validate: validateIranianMobile })}
             />
-            <AuthSubmitButton loading={loading} variant="brand">دریافت کد ورود پیامکی</AuthSubmitButton>
+            <AuthSubmitButton loading={loading} variant="brand">ارسال کد تأیید</AuthSubmitButton>
             <RegistrationFeedback />
             <p className="text-center text-label leading-relaxed text-login-muted">
               قبلاً عضو شدی؟{" "}

@@ -1,8 +1,6 @@
 # Habitree authentication architecture
 
-Authentication is organized by user journey. Login, registration, and password recovery each
-own their pages, components, hooks, and services. Only UI and utilities reused by more than one
-authentication journey live in `authentication/shared`.
+The authentication module is organized by user journey. Login, registration and password recovery own their pages, hooks, services and journey-specific components. UI and utilities reused by multiple authentication journeys live in `authentication/shared`.
 
 ```text
 src/features/authentication/
@@ -28,63 +26,47 @@ src/features/authentication/
 │   └── services/
 └── shared/
     ├── components/
+    ├── hooks/
     └── utils/
 ```
 
-There are intentionally no root-level `components`, `hooks`, `services`, `utils`, or page files
-inside `features/authentication`. Each page has one canonical location directly inside its
-journey folder; feature-specific supporting code lives in that journey's subfolders.
+## Layer responsibilities
 
-## Project-wide shared vs authentication shared
+- **Pages:** compose a screen, connect forms to the relevant hook and navigate only after the expected API success.
+- **Components:** reusable visual controls and layout.
+- **Hooks/providers:** hold journey state in memory, prevent duplicate submissions, and coordinate stages.
+- **Services:** map UI-level types to Django request/response schemas and translate backend errors.
+- **App-wide shared:** `src/shared/api/axios.ts` owns the Axios client and Authorization header; `src/shared/utils/phone.ts` normalizes Persian/Arabic numerals.
+- **Auth shared:** `OtpInput`, `OtpResendControls`, `useOtpCountdown`, `PasswordInput`, `PasswordRequirements`, `PhoneNumberInput` and `AuthLayout` are shared only by authentication journeys.
 
-- `src/shared` contains app-wide primitives and infrastructure such as `Button`, `Input`,
-  the Axios client, and phone digit normalization.
-- `src/features/authentication/shared` contains UI and utilities reused only by authentication
-  journeys, such as `OtpInput`, `PasswordInput`, `PasswordRequirements`, `AuthLayout`, and
-  phone/password validation helpers.
+## Shared components
 
-These two `shared` folders have different responsibilities and are not duplicate copies.
+- `OtpInput` is shared by registration and recovery; each flow retains its own state and service.
+- `OtpResendControls` and `useOtpCountdown` are shared by registration and recovery. Both use deadlines derived from backend `expires_in` and `resend_after` values.
+- `PasswordInput` is shared by Login, registration and password reset.
+- `PasswordRequirements` and `passwordPolicy.ts` are shared by registration and password reset.
+- Login currently uses phone + password; it is not an OTP login flow.
 
-## Shared controls
+## Current integration status
 
-- `OtpInput` is the single six-digit input used by registration and password recovery. Login
-  currently uses mobile number plus password and does not have an OTP step. Each flow retains its
-  own challenge state and service.
-- `PasswordInput` is reused by Login, registration, and password reset. It owns its show/hide
-  control; new-password rules are shown only for registration and password reset.
-- `PasswordRequirements` updates three checks while typing: minimum eight characters, at least
-  one English letter, and at least one digit. A satisfied requirement uses the success-green token
-  defined in `src/index.css`; its text and icon inherit the same color.
-- The checklist and submit validation both use `shared/utils/passwordPolicy.ts`.
-- Phone validation is shared by Login, registration, and recovery. Digit normalization remains in
-  the app-level `src/shared/utils/phone.ts` utility.
+- Registration uses the three API2 endpoints: send OTP, verify OTP and complete registration.
+- Login uses `POST /api/auth/login/`.
+- Password recovery uses send OTP, verify OTP and confirm reset endpoints.
+- The API details and current session limitations are maintained in [`authentication-implementation.md`](./authentication-implementation.md).
+
+## Session boundary and known limitation
+
+Django returns a short-lived access JWT in JSON and sets the refresh JWT in an HttpOnly cookie. The frontend keeps the access token in module memory only. It does not use LocalStorage or SessionStorage.
+
+The supplied backend still uses stock SimpleJWT refresh/blacklist views that expect a refresh token in the JSON body. There is not yet a cookie-aware refresh/session-bootstrap or frontend logout flow. After a full reload, the access token is lost and the frontend cannot restore the session from the HttpOnly cookie. Remember Me is therefore intentionally disabled.
 
 ## Responsive layout
 
-The desktop layout keeps the two-column Figma composition at widths of 1024px and above. The
-botanical illustration scales with viewport height rather than using a fixed 440px image height.
-At tablet and mobile widths the botanical side panel is hidden and the form becomes a centered,
-full-width column. Desktop layouts target common viewports such as 1366×768 and 1440×900 without
-page scrolling. Short desktop windows (below 721px high), tablet, and mobile layouts retain natural
-vertical scrolling rather than clipping form controls.
+- At 1024px and wider, the authentication shell uses a two-column botanical panel/form layout.
+- Below 1024px, the botanical panel is hidden and the form becomes a centered full-width column.
+- Below 640px, mobile spacing is applied.
+- The document supports a 320px minimum width; short desktop windows scroll rather than clipping form controls.
 
-Colors, typography, and semantic feedback colors are defined as CSS variables in `src/index.css`
-and exposed to Tailwind through `@theme inline`. The project uses Tailwind CSS v4.
+Responsive browser coverage is in `e2e/auth-responsive.spec.ts` and `e2e/login.spec.ts`.
 
-## Environment files
-
-Vite reads `.env.local` from the Frontend project root, alongside `package.json`; it does not read
-`src/.env.local`. Keep local environment values out of source control and do not overwrite the
-developer's `.env.local` when applying the auth update.
-
-## Backend status
-
-No backend API contract was supplied. The existing Axios instance is reused, but no endpoint,
-HTTP method, payload schema, response schema, token/session behavior, or SMS policy is guessed.
-The service adapters must be implemented from the backend's documented contract. Development
-mocks are explicitly opt-in and never send SMS, create accounts, authenticate users, or change
-real passwords.
-
-The password checklist currently represents the same provisional client-side policy in both
-registration and password reset. The backend remains authoritative; if its documented policy
-differs, update the shared policy and its tests together.
+See [`authentication-implementation.md`](./authentication-implementation.md) for API contracts, security, tests and sequence diagrams.

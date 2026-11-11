@@ -1,6 +1,5 @@
 import { useId } from "react";
 import { Link } from "react-router-dom";
-import { Check } from "lucide-react";
 import { PhoneNumberInput } from "../../shared/components/PhoneNumberInput";
 import { PasswordInput } from "../../shared/components/PasswordInput";
 import { AuthSubmitButton } from "../../shared/components/AuthSubmitButton";
@@ -11,7 +10,7 @@ import { useLogin } from "../hooks/useLogin";
 export function LoginForm() {
   const mobileId = useId();
   const passwordId = useId();
-  const { form, state, rememberMe, setRememberMe, submit, clearFeedback } = useLogin();
+  const { form, state, submit, clearFeedback } = useLogin();
   const loading = state.status === "loading";
 
   return (
@@ -42,12 +41,10 @@ export function LoginForm() {
           {...form.register("password", { required: "رمز عبور را وارد کن." })}
         />
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-caption">
-          <label className="relative flex min-h-6 cursor-pointer items-center gap-2 text-login-muted">
-            <input type="checkbox" name="rememberMe" className="peer sr-only" checked={rememberMe} disabled={loading} onChange={(event) => setRememberMe(event.target.checked)} />
-            <span aria-hidden="true" className="flex size-[18px] shrink-0 items-center justify-center rounded-[5px] border border-input-border bg-input-surface text-on-primary peer-checked:border-login-primary peer-checked:bg-login-primary peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-login-primary">
-              {rememberMe && <Check size={13} strokeWidth={2.5} />}
-            </span>
-            مرا به خاطر بسپار
+          <label className="relative flex min-h-6 cursor-not-allowed items-center gap-2 text-login-muted" title="مدت اعتبار ورود در حال حاضر توسط سرور تعیین می‌شود.">
+            <input type="checkbox" name="rememberMe" className="peer sr-only" defaultChecked={false} disabled />
+            <span aria-hidden="true" className="flex size-[18px] shrink-0 items-center justify-center rounded-[5px] border border-input-border bg-input-surface text-on-primary peer-checked:border-login-primary peer-checked:bg-login-primary peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-login-primary" />
+            مرا به خاطر بسپار (به‌زودی)
           </label>
           <Link className="min-h-6 font-semibold text-login-primary underline underline-offset-4 hover:text-brand-dark" to="/forgot-password">رمزت رو فراموش کردی؟</Link>
         </div>

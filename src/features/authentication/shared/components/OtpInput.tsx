@@ -7,6 +7,7 @@ interface OtpInputProps {
   label?: string;
   error?: string;
   disabled?: boolean;
+  onComplete?: (code: string) => void;
 }
 
 export function OtpInput({
@@ -15,6 +16,7 @@ export function OtpInput({
   label = "کد ورود پیامک شده را وارد کنید",
   error,
   disabled = false,
+  onComplete,
 }: OtpInputProps) {
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
   const errorId = useId();
@@ -36,6 +38,7 @@ export function OtpInput({
     const normalized = normalizePhone(raw);
     if (!/^\d{0,6}$/.test(normalized)) return;
 
+    const wasComplete = digits.length === 6 && digits.every((digit) => digit !== "");
     const start = normalized.length === 6 ? 0 : index;
     const next = normalized.length === 6 ? Array<string>(6).fill("") : [...digits];
     if (!normalized) next[index] = "";
@@ -45,6 +48,8 @@ export function OtpInput({
 
     onChange(next);
     if (normalized) focus(Math.min(start + normalized.length, 5));
+    const isComplete = next.length === 6 && next.every((digit) => digit !== "");
+    if (isComplete && (!wasComplete || normalized.length === 6)) onComplete?.(next.join(""));
   }
 
   return (

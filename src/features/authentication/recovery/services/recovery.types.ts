@@ -1,4 +1,4 @@
-/** UI-level recovery values; these are not backend wire schemas. */
+/** UI-level recovery values; backend wire fields are mapped in recovery.service.ts. */
 export interface RequestResetCodeInput {
   mobile: string;
 }
@@ -9,15 +9,22 @@ export interface VerifyResetCodeInput {
 
 export interface ResetPasswordInput {
   newPassword: string;
+  confirmPassword: string;
 }
 
-/** Opaque challenge/grant values are owned and interpreted by the backend adapter. */
+/** OTP challenge details are kept in memory only for the current recovery flow. */
 export interface RecoveryChallenge {
-  context: unknown;
+  mobile: string;
+  expiresAt: number;
+  resendAt: number;
+  context?: unknown;
 }
 
+/** The short-lived reset token is kept in memory only and never placed in a URL or Web Storage. */
 export interface RecoveryGrant {
-  context: unknown;
+  resetToken?: string;
+  expiresAt?: number;
+  context?: unknown;
 }
 
 export interface PasswordRecoveryService {
