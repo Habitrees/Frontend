@@ -1,0 +1,39 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Illustration/Botanical growth">
+<mask id="stroke0_0_265" fill="white">
+<path d="M75.625 123.75V125.625C73.125 125.625 71.875 124.375 71.875 121.875C74.375 121.875 75.625 123.125 75.625 125.625V123.75C75.625 121.667 76.875 120.625 79.375 120.625C79.375 122.708 78.125 123.75 75.625 123.75Z"/>
+</mask>
+<path id="Pot detail" d="M75.625 128.125H75.9375V125.625H75.625H75.3125V128.125H75.625ZM75.625 125.625H75.9375V123.75H75.625H75.3125V125.625H75.625ZM75.625 125.625V126.25H76.25V125.625H75.625ZM75.625 123.75H75V124.375H75.625V123.75ZM71.875 121.875V121.25H71.25V121.875H71.875ZM79.375 120.625H80V120H79.375V120.625ZM75.625 125.625V125C74.4713 125 73.7209 124.712 73.2544 124.246C72.788 123.779 72.5 123.029 72.5 121.875H71.875H71.25C71.25 123.221 71.587 124.346 72.3706 125.129C73.1541 125.913 74.2787 126.25 75.625 126.25V125.625ZM71.875 121.875V122.5C73.0287 122.5 73.7791 122.788 74.2456 123.254C74.712 123.721 75 124.471 75 125.625H75.625H76.25C76.25 124.279 75.913 123.154 75.1294 122.371C74.3459 121.587 73.2213 121.25 71.875 121.25V121.875ZM75.625 123.75H76.25C76.25 122.838 76.5183 122.257 76.9626 121.886C77.4288 121.498 78.1964 121.25 79.375 121.25V120.625V120C78.0536 120 76.9462 120.273 76.1624 120.926C75.3567 121.597 75 122.579 75 123.75H75.625ZM79.375 120.625H78.75C78.75 121.537 78.4817 122.118 78.0374 122.489C77.5712 122.877 76.8036 123.125 75.625 123.125V123.75V124.375C76.9464 124.375 78.0538 124.102 78.8376 123.449C79.6433 122.778 80 121.796 80 120.625H79.375Z" fill="#84465B" mask="url(#stroke0_0_265)"/>
+<rect id="Pot rim" x="38.75" y="108.75" width="73.125" height="5" rx="2.5" fill="#E8CCD5"/>
+<ellipse id="Soil" cx="75.3125" cy="109.062" rx="34.6875" ry="4.0625" fill="#84465B"/>
+<path id="Ceramic pot" d="M40.625 109.375H110L102.5 132.5C101.667 136.667 98.75 138.75 93.75 138.75H56.875C51.875 138.75 48.9583 136.667 48.125 132.5L40.625 109.375Z" fill="url(#paint0_linear_0_265)"/>
+<path id="Leaf" d="M75.6496 64.7879C75.025 47.4364 86.2674 40 111.875 40C111.875 56.1121 96.2606 66.647 75.6496 64.7879Z" fill="url(#paint1_linear_0_265)"/>
+<path id="Leaf_2" d="M76.25 76.3116C55.3664 79.6958 40.625 67.2869 40.625 53.75C62.7371 53.75 75.6358 60.5185 76.25 76.3116Z" fill="url(#paint2_linear_0_265)"/>
+<path id="Leaf_3" d="M75.0208 86.0803C74.4931 72.1991 83.991 66.25 105.625 66.25C105.625 79.1397 92.4335 87.5676 75.0208 86.0803Z" fill="url(#paint3_linear_0_265)"/>
+<path id="Leaf_4" d="M75.625 95.1834C57.6724 97.8359 45 88.11 45 77.5C64.0086 77.5 75.097 82.805 75.625 95.1834Z" fill="url(#paint4_linear_0_265)"/>
+<rect id="Stem" x="74.375" y="40.625" width="1.875" height="70" rx="0.9375" fill="#84465B"/>
+<ellipse id="Ground shadow" cx="75.3125" cy="139.062" rx="45.9375" ry="4.0625" fill="#6E2948"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_265" x1="40.625" y1="109.375" x2="110" y2="109.375" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4E4E8"/>
+<stop offset="1" stop-color="#D6ABB9"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_265" x1="75.625" y1="40" x2="111.875" y2="40" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DAB2C4"/>
+<stop offset="1" stop-color="#84465B"/>
+</linearGradient>
+<linearGradient id="paint2_linear_0_265" x1="40.625" y1="53.75" x2="76.25" y2="53.75" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DAB2C4"/>
+<stop offset="1" stop-color="#84465B"/>
+</linearGradient>
+<linearGradient id="paint3_linear_0_265" x1="75" y1="66.25" x2="105.625" y2="66.25" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DAB2C4"/>
+<stop offset="1" stop-color="#84465B"/>
+</linearGradient>
+<linearGradient id="paint4_linear_0_265" x1="45" y1="77.5" x2="75.625" y2="77.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DAB2C4"/>
+<stop offset="1" stop-color="#84465B"/>
+</linearGradient>
+</defs>
+</svg>

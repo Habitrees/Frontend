@@ -1,0 +1,63 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="144" height="144" viewBox="0 0 144 144" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Illustration/Botanical growth">
+<mask id="stroke0_0_163" fill="white">
+<path d="M72.6 118.8V120.6C70.2 120.6 69 119.4 69 117C71.4 117 72.6 118.2 72.6 120.6V118.8C72.6 116.8 73.8 115.8 76.2 115.8C76.2 117.8 75 118.8 72.6 118.8Z"/>
+</mask>
+<path id="Pot detail" d="M72.6 123H72.9V120.6H72.6H72.3V123H72.6ZM72.6 120.6H72.9V118.8H72.6H72.3V120.6H72.6ZM72.6 120.6V121.2H73.2V120.6H72.6ZM72.6 118.8H72V119.4H72.6V118.8ZM69 117V116.4H68.4V117H69ZM76.2 115.8H76.8V115.2H76.2V115.8ZM72.6 120.6V120C71.4925 120 70.7721 119.724 70.3243 119.276C69.8765 118.828 69.6 118.108 69.6 117H69H68.4C68.4 118.292 68.7235 119.372 69.4757 120.124C70.2279 120.876 71.3075 121.2 72.6 121.2V120.6ZM69 117V117.6C70.1075 117.6 70.8279 117.876 71.2757 118.324C71.7235 118.772 72 119.492 72 120.6H72.6H73.2C73.2 119.308 72.8765 118.228 72.1243 117.476C71.3721 116.724 70.2925 116.4 69 116.4V117ZM72.6 118.8H73.2C73.2 117.924 73.4575 117.366 73.8841 117.011C74.3316 116.638 75.0685 116.4 76.2 116.4V115.8V115.2C74.9315 115.2 73.8684 115.462 73.1159 116.089C72.3425 116.734 72 117.676 72 118.8H72.6ZM76.2 115.8H75.6C75.6 116.676 75.3425 117.234 74.9159 117.589C74.4684 117.962 73.7315 118.2 72.6 118.2V118.8V119.4C73.8685 119.4 74.9316 119.138 75.6841 118.511C76.4575 117.866 76.8 116.924 76.8 115.8H76.2Z" fill="#84465B" mask="url(#stroke0_0_163)"/>
+<rect id="Pot rim" x="37.2" y="104.4" width="70.2" height="4.8" rx="2.4" fill="#E8CCD5"/>
+<ellipse id="Soil" cx="72.3" cy="104.7" rx="33.3" ry="3.9" fill="#84465B"/>
+<path id="Ceramic pot" d="M39 105H105.6L98.4 127.2C97.6 131.2 94.8 133.2 90 133.2H54.6C49.8 133.2 47 131.2 46.2 127.2L39 105Z" fill="url(#paint0_linear_0_163)"/>
+<ellipse id="Fantasy bud" cx="30.9" cy="60.3" rx="3.9" ry="5.1" fill="#DAB2C4"/>
+<ellipse id="Fantasy bud_2" cx="108.9" cy="46.8" rx="5.1" ry="6.6" fill="#DAB2C4"/>
+<path id="Leaf" d="M97.82 76.0218C97.3134 61.4465 106.431 55.2 127.2 55.2C127.2 68.7342 114.536 77.5835 97.82 76.0218Z" fill="url(#paint1_linear_0_163)"/>
+<path id="Leaf_2" d="M52.2 87.103C33.5586 90.0884 20.4 79.1418 20.4 67.2C40.1379 67.2 51.6517 73.1709 52.2 87.103Z" fill="url(#paint2_linear_0_163)"/>
+<path id="Leaf_3" d="M73.8179 37.5607C73.3631 17.9882 81.5506 9.6 100.2 9.6C100.2 27.7745 88.8284 39.6578 73.8179 37.5607Z" fill="url(#paint3_linear_0_163)"/>
+<path id="Leaf_4" d="M73.8 49.1568C57.269 53.0203 45.6 38.8541 45.6 23.4C63.1034 23.4 73.3138 31.127 73.8 49.1568Z" fill="url(#paint4_linear_0_163)"/>
+<path id="Leaf_5" d="M72.6236 62.1964C72.024 45.5389 82.8167 38.4 107.4 38.4C107.4 53.8676 92.4102 63.9811 72.6236 62.1964Z" fill="url(#paint5_linear_0_163)"/>
+<path id="Leaf_6" d="M73.2 73.2591C53.1517 76.508 39 64.5955 39 51.6C60.2276 51.6 72.6103 58.0977 73.2 73.2591Z" fill="url(#paint6_linear_0_163)"/>
+<path id="Leaf_7" d="M72.02 82.6371C71.5134 69.3111 80.6313 63.6 101.4 63.6C101.4 75.9741 88.7362 84.0649 72.02 82.6371Z" fill="url(#paint7_linear_0_163)"/>
+<path id="Leaf_8" d="M72.6 91.3761C55.3655 93.9225 43.2 84.5856 43.2 74.4C61.4483 74.4 72.0931 79.4928 72.6 91.3761Z" fill="url(#paint8_linear_0_163)"/>
+<path id="Branch" d="M72 106.2C85.2 88.6 96.6 75.8 106.2 67.8" stroke-width="1.2" stroke="#84465B"/>
+<path id="Branch_2" d="M47.4 75C57.4 79.8 65.8 90.2 72.6 106.2" stroke-width="1.2" stroke="#84465B"/>
+<rect id="Stem" x="71.4" y="16.2" width="1.8" height="90" rx="0.9" fill="#84465B"/>
+<ellipse id="Ground shadow" cx="72.3" cy="133.5" rx="44.1" ry="3.9" fill="#6E2948"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_163" x1="39" y1="105" x2="105.6" y2="105" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4E4E8"/>
+<stop offset="1" stop-color="#D6ABB9"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_163" x1="97.8" y1="55.2" x2="127.2" y2="55.2" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DAB2C4"/>
+<stop offset="1" stop-color="#84465B"/>
+</linearGradient>
+<linearGradient id="paint2_linear_0_163" x1="20.4" y1="67.2" x2="52.2" y2="67.2" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DAB2C4"/>
+<stop offset="1" stop-color="#84465B"/>
+</linearGradient>
+<linearGradient id="paint3_linear_0_163" x1="73.8" y1="9.6" x2="100.2" y2="9.6" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DAB2C4"/>
+<stop offset="1" stop-color="#84465B"/>
+</linearGradient>
+<linearGradient id="paint4_linear_0_163" x1="45.6" y1="23.4" x2="73.8" y2="23.4" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DAB2C4"/>
+<stop offset="1" stop-color="#84465B"/>
+</linearGradient>
+<linearGradient id="paint5_linear_0_163" x1="72.6" y1="38.4" x2="107.4" y2="38.4" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DAB2C4"/>
+<stop offset="1" stop-color="#84465B"/>
+</linearGradient>
+<linearGradient id="paint6_linear_0_163" x1="39" y1="51.6" x2="73.2" y2="51.6" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DAB2C4"/>
+<stop offset="1" stop-color="#84465B"/>
+</linearGradient>
+<linearGradient id="paint7_linear_0_163" x1="72" y1="63.6" x2="101.4" y2="63.6" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DAB2C4"/>
+<stop offset="1" stop-color="#84465B"/>
+</linearGradient>
+<linearGradient id="paint8_linear_0_163" x1="43.2" y1="74.4" x2="72.6" y2="74.4" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DAB2C4"/>
+<stop offset="1" stop-color="#84465B"/>
+</linearGradient>
+</defs>
+</svg>

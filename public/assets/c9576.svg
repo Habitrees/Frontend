@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="504" height="432" viewBox="0 0 504 432" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="stroke0_0_349" fill="white">
+<path d="M504 216C504 335.294 391.176 432 252 432C112.824 432 0 335.294 0 216C0 96.7065 112.824 0 252 0C391.176 0 504 96.7065 504 216Z"/>
+</mask>
+<path id="Orbit" d="M504 216C504 335.294 391.176 432 252 432C112.824 432 0 335.294 0 216C0 96.7065 112.824 0 252 0C391.176 0 504 96.7065 504 216Z" stroke-width="2" stroke="#EBDDE2" mask="url(#stroke0_0_349)"/>
+</svg>

@@ -1,0 +1,39 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="176" height="176" viewBox="0 0 176 176" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Illustration/Botanical growth">
+<mask id="stroke0_0_174" fill="white">
+<path d="M88.7333 145.2V147.4C85.8 147.4 84.3333 145.933 84.3333 143C87.2667 143 88.7333 144.467 88.7333 147.4V145.2C88.7333 142.756 90.2 141.533 93.1333 141.533C93.1333 143.978 91.6667 145.2 88.7333 145.2Z"/>
+</mask>
+<path id="Pot detail" d="M88.7333 150.333H89.1V147.4H88.7333H88.3667V150.333H88.7333ZM88.7333 147.4H89.1V145.2H88.7333H88.3667V147.4H88.7333ZM88.7333 147.4V148.133H89.4667V147.4H88.7333ZM88.7333 145.2H88V145.933H88.7333V145.2ZM84.3333 143V142.267H83.6V143H84.3333ZM93.1333 141.533H93.8667V140.8H93.1333V141.533ZM88.7333 147.4V146.667C87.3797 146.667 86.4992 146.329 85.9519 145.781C85.4046 145.234 85.0667 144.354 85.0667 143H84.3333H83.6C83.6 144.58 83.9954 145.899 84.9148 146.819C85.8342 147.738 87.1536 148.133 88.7333 148.133V147.4ZM84.3333 143V143.733C85.687 143.733 86.5675 144.071 87.1148 144.619C87.6621 145.166 88 146.046 88 147.4H88.7333H89.4667C89.4667 145.82 89.0712 144.501 88.1519 143.581C87.2325 142.662 85.913 142.267 84.3333 142.267V143ZM88.7333 145.2H89.4667C89.4667 144.13 89.7814 143.448 90.3028 143.013C90.8498 142.558 91.7504 142.267 93.1333 142.267V141.533V140.8C91.5829 140.8 90.2835 141.12 89.3639 141.887C88.4186 142.674 88 143.826 88 145.2H88.7333ZM93.1333 141.533H92.4C92.4 142.604 92.0852 143.285 91.5639 143.72C91.0169 144.176 90.1162 144.467 88.7333 144.467V145.2V145.933C90.2838 145.933 91.5831 145.613 92.5028 144.847C93.4481 144.059 93.8667 142.907 93.8667 141.533H93.1333Z" fill="#84465B" mask="url(#stroke0_0_174)"/>
+<rect id="Pot rim" x="45.4667" y="127.6" width="85.8" height="5.86667" rx="2.93333" fill="#E8CCD5"/>
+<ellipse id="Soil" cx="88.3667" cy="127.967" rx="40.7" ry="4.76667" fill="#84465B"/>
+<path id="Ceramic pot" d="M47.6667 128.333H129.067L120.267 155.467C119.289 160.356 115.867 162.8 110 162.8H66.7333C60.8667 162.8 57.4444 160.356 56.4667 155.467L47.6667 128.333Z" fill="url(#paint0_linear_0_174)"/>
+<path id="Leaf" d="M88.7622 76.0178C88.0294 55.6587 101.22 46.9333 131.267 46.9333C131.267 65.8382 112.946 78.1991 88.7622 76.0178Z" fill="url(#paint1_linear_0_174)"/>
+<path id="Leaf_2" d="M89.4667 89.5389C64.9632 93.5097 47.6667 78.95 47.6667 63.0667C73.6115 63.0667 88.746 71.0083 89.4667 89.5389Z" fill="url(#paint2_linear_0_174)"/>
+<path id="Leaf_3" d="M88.0244 101.001C87.4053 84.7136 98.5494 77.7333 123.933 77.7333C123.933 92.8572 108.455 102.746 88.0244 101.001Z" fill="url(#paint3_linear_0_174)"/>
+<path id="Leaf_4" d="M88.7333 111.682C67.669 114.794 52.8 103.382 52.8 90.9333C75.1034 90.9333 88.1138 97.1579 88.7333 111.682Z" fill="url(#paint4_linear_0_174)"/>
+<rect id="Stem" x="87.2667" y="47.6667" width="2.2" height="82.1333" rx="1.1" fill="#657F70"/>
+<ellipse id="Ground shadow" cx="88.3667" cy="163.167" rx="53.9" ry="4.76667" fill="#6E2948"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_174" x1="47.6667" y1="128.333" x2="129.067" y2="128.333" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4E4E8"/>
+<stop offset="1" stop-color="#D6ABB9"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_174" x1="88.7333" y1="46.9333" x2="131.267" y2="46.9333" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8FA99B"/>
+<stop offset="1" stop-color="#657F70"/>
+</linearGradient>
+<linearGradient id="paint2_linear_0_174" x1="47.6667" y1="63.0667" x2="89.4667" y2="63.0667" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8FA99B"/>
+<stop offset="1" stop-color="#657F70"/>
+</linearGradient>
+<linearGradient id="paint3_linear_0_174" x1="88" y1="77.7333" x2="123.933" y2="77.7333" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8FA99B"/>
+<stop offset="1" stop-color="#657F70"/>
+</linearGradient>
+<linearGradient id="paint4_linear_0_174" x1="52.8" y1="90.9333" x2="88.7333" y2="90.9333" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8FA99B"/>
+<stop offset="1" stop-color="#657F70"/>
+</linearGradient>
+</defs>
+</svg>

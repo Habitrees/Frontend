@@ -1,0 +1,63 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="224" height="224" viewBox="0 0 224 224" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Illustration/Botanical growth">
+<mask id="stroke0_0_235" fill="white">
+<path d="M112.933 184.8V187.6C109.2 187.6 107.333 185.733 107.333 182C111.067 182 112.933 183.867 112.933 187.6V184.8C112.933 181.689 114.8 180.133 118.533 180.133C118.533 183.244 116.667 184.8 112.933 184.8Z"/>
+</mask>
+<path id="Pot detail" d="M112.933 191.333H113.4V187.6H112.933H112.467V191.333H112.933ZM112.933 187.6H113.4V184.8H112.933H112.467V187.6H112.933ZM112.933 187.6V188.533H113.867V187.6H112.933ZM112.933 184.8H112V185.733H112.933V184.8ZM107.333 182V181.067H106.4V182H107.333ZM118.533 180.133H119.467V179.2H118.533V180.133ZM112.933 187.6V186.667C111.211 186.667 110.09 186.237 109.393 185.54C108.697 184.843 108.267 183.723 108.267 182H107.333H106.4C106.4 184.011 106.903 185.69 108.073 186.86C109.243 188.03 110.923 188.533 112.933 188.533V187.6ZM107.333 182V182.933C109.056 182.933 110.177 183.363 110.873 184.06C111.57 184.757 112 185.877 112 187.6H112.933H113.867C113.867 185.589 113.363 183.91 112.193 182.74C111.023 181.57 109.344 181.067 107.333 181.067V182ZM112.933 184.8H113.867C113.867 183.438 114.267 182.57 114.931 182.017C115.627 181.437 116.773 181.067 118.533 181.067V180.133V179.2C116.56 179.2 114.906 179.608 113.736 180.583C112.533 181.586 112 183.051 112 184.8H112.933ZM118.533 180.133H117.6C117.6 181.496 117.199 182.363 116.536 182.916C115.84 183.496 114.693 183.867 112.933 183.867V184.8V185.733C114.907 185.733 116.56 185.326 117.731 184.35C118.934 183.348 119.467 181.882 119.467 180.133H118.533Z" fill="#84465B" mask="url(#stroke0_0_235)"/>
+<rect id="Pot rim" x="57.8667" y="162.4" width="109.2" height="7.46667" rx="3.73333" fill="#E8CCD5"/>
+<ellipse id="Soil" cx="112.467" cy="162.867" rx="51.8" ry="6.06667" fill="#84465B"/>
+<path id="Ceramic pot" d="M60.6667 163.333H164.267L153.067 197.867C151.822 204.089 147.467 207.2 140 207.2H84.9333C77.4667 207.2 73.1111 204.089 71.8667 197.867L60.6667 163.333Z" fill="url(#paint0_linear_0_235)"/>
+<ellipse id="Fantasy bud" cx="48.0667" cy="93.8" rx="6.06667" ry="7.93333" fill="#DAB2C4"/>
+<ellipse id="Fantasy bud_2" cx="169.4" cy="72.8" rx="7.93333" ry="10.2667" fill="#DAB2C4"/>
+<path id="Leaf" d="M152.164 118.256C151.376 95.5835 165.56 85.8667 197.867 85.8667C197.867 106.92 178.167 120.685 152.164 118.256Z" fill="url(#paint1_linear_0_235)"/>
+<path id="Leaf_2" d="M81.2 135.493C52.2023 140.138 31.7333 123.109 31.7333 104.533C62.4368 104.533 80.3471 113.821 81.2 135.493Z" fill="url(#paint2_linear_0_235)"/>
+<path id="Leaf_3" d="M114.828 58.4278C114.12 27.9817 126.856 14.9333 155.867 14.9333C155.867 43.2047 138.178 61.6899 114.828 58.4278Z" fill="url(#paint3_linear_0_235)"/>
+<path id="Leaf_4" d="M114.8 76.4661C89.0851 82.476 70.9333 60.4397 70.9333 36.4C98.1609 36.4 114.044 48.4198 114.8 76.4661Z" fill="url(#paint4_linear_0_235)"/>
+<path id="Leaf_5" d="M112.97 96.7499C112.037 70.8383 128.826 59.7333 167.067 59.7333C167.067 83.7941 143.749 99.5261 112.97 96.7499Z" fill="url(#paint5_linear_0_235)"/>
+<path id="Leaf_6" d="M113.867 113.959C82.6805 119.012 60.6667 100.482 60.6667 80.2667C93.6874 80.2667 112.949 90.3743 113.867 113.959Z" fill="url(#paint6_linear_0_235)"/>
+<path id="Leaf_7" d="M112.031 128.547C111.243 107.817 125.427 98.9333 157.733 98.9333C157.733 118.182 138.034 130.768 112.031 128.547Z" fill="url(#paint7_linear_0_235)"/>
+<path id="Leaf_8" d="M112.933 142.141C86.1241 146.102 67.2 131.578 67.2 115.733C95.5862 115.733 112.145 123.655 112.933 142.141Z" fill="url(#paint8_linear_0_235)"/>
+<path id="Branch" d="M112 165.2C132.533 137.822 150.267 117.911 165.2 105.467" stroke-width="1.86667" stroke="#657F70"/>
+<path id="Branch_2" d="M73.7333 116.667C89.2889 124.133 102.356 140.311 112.933 165.2" stroke-width="1.86667" stroke="#657F70"/>
+<rect id="Stem" x="111.067" y="25.2" width="2.8" height="140" rx="1.4" fill="#657F70"/>
+<ellipse id="Ground shadow" cx="112.467" cy="207.667" rx="68.6" ry="6.06667" fill="#6E2948"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_235" x1="60.6667" y1="163.333" x2="164.267" y2="163.333" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4E4E8"/>
+<stop offset="1" stop-color="#D6ABB9"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_235" x1="152.133" y1="85.8667" x2="197.867" y2="85.8667" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8FA99B"/>
+<stop offset="1" stop-color="#657F70"/>
+</linearGradient>
+<linearGradient id="paint2_linear_0_235" x1="31.7333" y1="104.533" x2="81.2" y2="104.533" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8FA99B"/>
+<stop offset="1" stop-color="#657F70"/>
+</linearGradient>
+<linearGradient id="paint3_linear_0_235" x1="114.8" y1="14.9333" x2="155.867" y2="14.9333" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8FA99B"/>
+<stop offset="1" stop-color="#657F70"/>
+</linearGradient>
+<linearGradient id="paint4_linear_0_235" x1="70.9333" y1="36.4" x2="114.8" y2="36.4" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8FA99B"/>
+<stop offset="1" stop-color="#657F70"/>
+</linearGradient>
+<linearGradient id="paint5_linear_0_235" x1="112.933" y1="59.7333" x2="167.067" y2="59.7333" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8FA99B"/>
+<stop offset="1" stop-color="#657F70"/>
+</linearGradient>
+<linearGradient id="paint6_linear_0_235" x1="60.6667" y1="80.2667" x2="113.867" y2="80.2667" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8FA99B"/>
+<stop offset="1" stop-color="#657F70"/>
+</linearGradient>
+<linearGradient id="paint7_linear_0_235" x1="112" y1="98.9333" x2="157.733" y2="98.9333" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8FA99B"/>
+<stop offset="1" stop-color="#657F70"/>
+</linearGradient>
+<linearGradient id="paint8_linear_0_235" x1="67.2" y1="115.733" x2="112.933" y2="115.733" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8FA99B"/>
+<stop offset="1" stop-color="#657F70"/>
+</linearGradient>
+</defs>
+</svg>
