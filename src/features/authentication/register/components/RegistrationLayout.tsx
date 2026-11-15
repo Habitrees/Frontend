@@ -6,20 +6,17 @@ interface RegistrationLayoutProps {
   children: ReactNode;
   title: string;
   label: string;
-  showPrivacyFooter?: boolean;
 }
 
 export function RegistrationLayout({
   children,
   title,
   label,
-  showPrivacyFooter = false,
 }: RegistrationLayoutProps) {
   return (
     <AuthLayout
       title={title}
       label={label}
-      showPrivacyFooter={showPrivacyFooter}
       headerVariant="registration"
       welcome={{
         heading: <>یک عادت کوچک،<br />یک شروع برای رشد.</>,

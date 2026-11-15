@@ -14,7 +14,7 @@ export function LoginForm() {
   const loading = state.status === "loading";
 
   return (
-    <form className="flex w-full max-w-[440px] flex-col gap-10" noValidate onSubmit={submit} onChange={clearFeedback} aria-labelledby="login-heading" aria-busy={loading}>
+    <form className="flex w-full max-w-[440px] flex-col gap-10" noValidate autoComplete="on" onSubmit={submit} onChange={clearFeedback} aria-labelledby="login-heading" aria-busy={loading}>
       <div className="text-right">
         <h1 id="login-heading" className="text-login-heading-mobile font-extrabold text-login-text sm:text-login-heading">خوش اومدی، منتظرت بودیم !</h1>
         <p className="mt-2 text-body leading-relaxed text-login-muted">وارد شو؛ وقت رسیدگی به عادت‌های خوب توست.</p>

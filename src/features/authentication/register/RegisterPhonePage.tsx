@@ -52,7 +52,6 @@ export default function RegisterPhonePage() {
               label="شماره موبایل"
               placeholder="شماره موبایلت رو وارد کن"
               aria-required="true"
-              maxLength={14}
               readOnly={loading}
               error={form.formState.errors.mobile?.message}
               {...form.register("mobile", { validate: validateIranianMobile })}

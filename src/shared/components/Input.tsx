@@ -6,12 +6,14 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   icon?: ReactNode;
   action?: ReactNode;
   error?: string;
+  hint?: string;
 };
 
-export function Input({ id, label, icon, action, error, className = "", ...props }: InputProps) {
+export function Input({ id, label, icon, action, error, hint, className = "", ...props }: InputProps) {
   const errorId = `${id}-error`;
+  const hintId = `${id}-hint`;
   const alignment = props.dir === "ltr" ? "text-left placeholder:text-right" : "text-right";
-  const describedBy = [props["aria-describedby"], error ? errorId : undefined].filter(Boolean).join(" ") || undefined;
+  const describedBy = [props["aria-describedby"], error ? errorId : hint ? hintId : undefined].filter(Boolean).join(" ") || undefined;
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -23,11 +25,15 @@ export function Input({ id, label, icon, action, error, className = "", ...props
           id={id}
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
-          className={`min-w-0 flex-1 bg-transparent text-label text-login-text outline-none placeholder:text-input-placeholder ${alignment} ${className}`}
+          className={`habitree-auth-input min-w-0 flex-1 bg-transparent text-label text-login-text outline-none placeholder:text-input-placeholder ${alignment} ${className}`}
         />
         {action}
       </div>
-      {error && <p id={errorId} className="text-caption text-feedback-error" role="alert">{error}</p>}
+      {error ? (
+        <p id={errorId} className="text-caption text-feedback-error" role="alert">{error}</p>
+      ) : hint ? (
+        <p id={hintId} className="text-caption text-login-muted">{hint}</p>
+      ) : null}
     </div>
   );
 }

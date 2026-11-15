@@ -138,3 +138,32 @@ test("login text tokens meet normal-text contrast and fields expose required sem
     expect(ratio, `${foreground} on ${background}`).toBeGreaterThanOrEqual(4.5);
   }
 });
+
+
+test("login keeps browser autofill and phone inputs accept digits only with 11-digit guidance", async ({ page }) => {
+  await page.goto("/login");
+  const phone = page.getByLabel("شماره موبایل", { exact: true });
+  const password = page.getByLabel("رمز عبور", { exact: true });
+
+  await expect(phone).toHaveAttribute("autocomplete", "username");
+  await expect(password).toHaveAttribute("autocomplete", "current-password");
+  await expect(phone).toHaveAttribute("inputmode", "numeric");
+  await expect(phone).toHaveAttribute("maxlength", "11");
+
+  await phone.fill("abc۱۲۳");
+  await expect(phone).toHaveValue("123");
+  await expect(page.getByText("شماره موبایل باید ۱۱ رقم باشد (الان ۳ رقم).")).toBeVisible();
+
+  await phone.press("x");
+  await expect(phone).toHaveValue("123");
+
+  await phone.fill("۰۹۱۲۳۴۵۶۷۸۹");
+  await expect(phone).toHaveValue("09123456789");
+  await expect(page.getByText(/شماره موبایل باید ۱۱ رقم باشد/)).toHaveCount(0);
+
+  await phone.fill("0912");
+  await password.fill("a-password");
+  await page.getByRole("button", { name: "ورود به habitree", exact: true }).click();
+  await expect(page.getByText("شماره موبایل معتبر نیست؛ شماره باید ۱۱ رقم باشد.")).toBeVisible();
+  await expect(page.getByText(/با خیال راحت|خیالت راحت|اطلاعاتت پیش ما/)).toHaveCount(0);
+});

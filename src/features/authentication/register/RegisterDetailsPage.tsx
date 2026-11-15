@@ -71,7 +71,6 @@ export default function RegisterDetailsPage() {
     <RegistrationLayout
       title="تکمیل ثبت‌نام | habitree"
       label="تکمیل اطلاعات حساب کاربری"
-      showPrivacyFooter
     >
       <div className="w-full max-w-[440px]">
         <RegistrationSimulationNotice />

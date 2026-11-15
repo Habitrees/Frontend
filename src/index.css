@@ -88,6 +88,20 @@
     outline: 2px solid var(--login-primary);
     outline-offset: 4px;
   }
+  /* Preserve browser autofill while replacing Chrome/Safari's blue fill. */
+  .habitree-auth-input:-webkit-autofill,
+  .habitree-auth-input:-webkit-autofill:hover,
+  .habitree-auth-input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--input-surface) inset !important;
+    box-shadow: 0 0 0 1000px var(--input-surface) inset !important;
+    -webkit-text-fill-color: var(--login-text) !important;
+    caret-color: var(--login-text);
+  }
+  .habitree-auth-input:autofill {
+    box-shadow: 0 0 0 1000px var(--input-surface) inset !important;
+    -webkit-text-fill-color: var(--login-text) !important;
+    caret-color: var(--login-text);
+  }
 }
 
 @layer components {
