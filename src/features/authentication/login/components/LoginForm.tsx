@@ -46,7 +46,7 @@ export function LoginForm() {
             <span aria-hidden="true" className="flex size-[18px] shrink-0 items-center justify-center rounded-[5px] border border-input-border bg-input-surface text-on-primary peer-checked:border-login-primary peer-checked:bg-login-primary peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-login-primary" />
             مرا به خاطر بسپار (به‌زودی)
           </label>
-          <Link className="min-h-6 font-semibold text-login-primary underline underline-offset-4 hover:text-brand-dark" to="/forgot-password">رمزت رو فراموش کردی؟</Link>
+          <Link className="min-h-6 font-semibold text-login-primary underline underline-offset-4 hover:text-sage-dark" to="/forgot-password">رمزت رو فراموش کردی؟</Link>
         </div>
         <AuthSubmitButton loading={loading} loadingLabel="در حال ورود…">ورود به habitree</AuthSubmitButton>
         {state.status === "error" && <p role="alert" className="text-center text-caption text-feedback-error">{state.message}</p>}

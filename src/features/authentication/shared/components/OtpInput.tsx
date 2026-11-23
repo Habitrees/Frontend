@@ -60,7 +60,7 @@ export function OtpInput({
           <input
             key={index}
             ref={(element) => { inputs.current[index] = element; }}
-            className={`h-[54px] w-full min-w-0 rounded-xl border bg-input-surface text-center text-body text-login-text outline-none focus:border-login-primary focus:ring-2 focus:ring-login-primary/20 ${error ? "border-feedback-error" : "border-input-border"}`}
+            className={`h-[54px] w-full min-w-0 rounded-xl border bg-input-surface text-center text-body text-login-text outline-none transition-[border-color,box-shadow] duration-200 ${error ? "border-feedback-error focus:border-feedback-error focus:ring-2 focus:ring-feedback-error/15" : `${digit ? "border-sage" : "border-input-border"} hover:border-sage-border focus:border-login-primary focus:ring-2 focus:ring-login-primary/20`}`}
             aria-label={`رقم ${index + 1} کد پیامکی`}
             aria-required="true"
             aria-invalid={Boolean(error)}

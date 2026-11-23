@@ -89,7 +89,7 @@ export default function RegisterDetailsPage() {
             <p className="mt-1 text-body text-login-muted">اولین قدم برای روزهای سبزتر، همین‌جاست.</p>
             <button
               type="button"
-              className="mt-1 text-caption font-semibold text-login-primary underline underline-offset-4 hover:text-brand-dark"
+              className="mt-1 text-caption font-semibold text-login-primary underline underline-offset-4 hover:text-sage-dark"
               onClick={() => {
                 if (registration.editCode()) navigate("/register");
               }}
@@ -175,7 +175,7 @@ export default function RegisterDetailsPage() {
                   validate: (accepted) => accepted || "برای ساخت حساب، پذیرش قوانین ضروری است.",
                 })}
               />
-              <span aria-hidden="true" className="flex size-[18px] shrink-0 items-center justify-center rounded-[5px] border border-input-border bg-input-surface text-on-primary peer-checked:border-login-primary peer-checked:bg-login-primary peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-login-primary">
+              <span aria-hidden="true" className="flex size-[18px] shrink-0 items-center justify-center rounded-[5px] border border-input-border bg-input-surface text-on-primary peer-checked:border-sage-dark peer-checked:bg-sage-dark peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-login-primary">
                 <Check size={13} strokeWidth={2.5} />
               </span>
               <span>با قوانین habitree و حریم خصوصی موافقم.</span>

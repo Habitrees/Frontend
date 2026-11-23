@@ -19,7 +19,7 @@ export function PasswordInput({ label, id, ...props }: PasswordInputProps) {
       action={
         <button
           type="button"
-          className="-m-3 flex size-11 shrink-0 items-center justify-center rounded-lg text-login-muted hover:text-brand-dark"
+          className="-m-3 flex size-11 shrink-0 items-center justify-center rounded-lg text-login-muted hover:text-sage-dark"
           aria-label={`${visible ? "پنهان کردن" : "نمایش"} ${label}`}
           aria-pressed={visible}
           aria-controls={id}

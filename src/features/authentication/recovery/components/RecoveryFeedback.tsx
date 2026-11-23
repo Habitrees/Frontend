@@ -10,7 +10,7 @@ export function RecoveryFeedback() {
 export function RecoverySimulationNotice() {
   const { simulated } = usePasswordRecovery();
   return simulated ? (
-    <p className="recovery-simulation-notice rounded-xl border border-input-border bg-background p-3 text-caption text-login-muted" role="note">
+    <p className="recovery-simulation-notice rounded-xl border border-sage-border bg-sage-soft p-3 text-caption text-sage-dark" role="note">
       حالت آزمایشی: پیامکی ارسال نمی‌شود و رمز واقعی تغییر نمی‌کند. کد آزمایشی: <bdi dir="ltr">123456</bdi>
     </p>
   ) : null;

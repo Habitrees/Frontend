@@ -21,7 +21,7 @@ export function Button({
   return (
     <button
       type={type}
-      className={`flex h-[54px] w-full items-center justify-center gap-2 rounded-xl px-4 text-body font-bold text-on-primary transition-colors disabled:cursor-wait disabled:opacity-70 motion-reduce:transition-none ${variantClasses[variant]} ${className}`}
+      className={`flex h-[54px] w-full items-center justify-center gap-2 rounded-xl px-4 text-body font-bold text-on-primary transition-[background-color,box-shadow,transform] duration-200 hover:shadow-[0_9px_20px_rgba(100,57,74,0.20)] active:translate-y-px disabled:cursor-wait disabled:opacity-70 disabled:hover:shadow-none disabled:active:translate-y-0 motion-reduce:transition-none ${variantClasses[variant]} ${className}`}
       {...props}
     >
       {children}

@@ -13,13 +13,16 @@ export function Input({ id, label, icon, action, error, hint, className = "", ..
   const errorId = `${id}-error`;
   const hintId = `${id}-hint`;
   const alignment = props.dir === "ltr" ? "text-left placeholder:text-right" : "text-right";
+  const inputFrameStyle = error
+    ? "border-feedback-error focus-within:border-feedback-error focus-within:ring-2 focus-within:ring-feedback-error/15"
+    : "border-input-border hover:border-sage-border focus-within:border-login-primary focus-within:ring-2 focus-within:ring-login-primary/20";
   const describedBy = [props["aria-describedby"], error ? errorId : hint ? hintId : undefined].filter(Boolean).join(" ") || undefined;
 
   return (
     <div className="flex w-full flex-col gap-2">
       <label className="text-label font-semibold text-login-text" htmlFor={id}>{label}</label>
-      <div className={`flex h-[54px] items-center gap-3 rounded-xl border bg-input-surface px-4 transition-colors focus-within:border-login-primary focus-within:ring-2 focus-within:ring-login-primary/20 ${error ? "border-feedback-error" : "border-input-border"}`}>
-        {icon && <span className="shrink-0 text-muted" aria-hidden="true">{icon}</span>}
+      <div className={`flex h-[54px] items-center gap-3 rounded-xl border bg-input-surface px-4 transition-[border-color,box-shadow] duration-200 ${inputFrameStyle}`}>
+        {icon && <span className="shrink-0 text-sage" aria-hidden="true">{icon}</span>}
         <input
           {...props}
           id={id}

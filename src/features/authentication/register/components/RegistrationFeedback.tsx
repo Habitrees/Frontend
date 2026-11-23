@@ -12,7 +12,7 @@ export function RegistrationSimulationNotice() {
   if (!simulated) return null;
 
   return (
-    <p className="registration-simulation-notice rounded-xl border border-input-border bg-background text-login-muted" role="note">
+    <p className="registration-simulation-notice rounded-xl border border-sage-border bg-sage-soft text-sage-dark" role="note">
       حالت آزمایشی: پیامک واقعی ارسال نمی‌شود و حساب واقعی ساخته نمی‌شود. کد آزمایشی: <bdi dir="ltr">123456</bdi>
     </p>
   );

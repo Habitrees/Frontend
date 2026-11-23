@@ -60,7 +60,7 @@ export default function RegisterPhonePage() {
             <RegistrationFeedback />
             <p className="text-center text-label leading-relaxed text-login-muted">
               قبلاً عضو شدی؟{" "}
-              <Link className="font-bold text-login-primary underline underline-offset-4 hover:text-brand-dark" to="/login">
+              <Link className="font-bold text-login-primary underline underline-offset-4 hover:text-sage-dark" to="/login">
                 وارد شو
               </Link>
             </p>

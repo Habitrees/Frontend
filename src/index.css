@@ -4,7 +4,13 @@
 :root {
   --brand: #8d425c;
   --brand-dark: #6e2948;
-  --accent: #4a639d;
+  /* Sage is the secondary brand accent: growth, gentle hover, and success. */
+  --sage: #71977b;
+  --sage-dark: #2f6b55;
+  --sage-soft: #eaf2e9;
+  --sage-border: #b5ceba;
+  --sage-panel-end: #e1e9dc;
+  --accent: var(--sage-dark);
   --surface-soft: #e7d3d7;
   --muted: #ad9ca1;
   --background: #fffcf9;
@@ -18,7 +24,7 @@
   --input-placeholder: #78686f;
   --on-primary: #ffffff;
   --feedback-error: #a12d47;
-  --reassurance: #176b3a;
+  --reassurance: var(--sage-dark);
   --botanical-heading: #6c3e50;
   --botanical-copy: #6b5660;
   --botanical-start: #efe9e5;
@@ -36,6 +42,10 @@
 }
 
 @theme inline {
+  --color-sage: var(--sage);
+  --color-sage-dark: var(--sage-dark);
+  --color-sage-soft: var(--sage-soft);
+  --color-sage-border: var(--sage-border);
   --color-brand: var(--brand);
   --color-brand-dark: var(--brand-dark);
   --color-accent: var(--accent);
@@ -119,7 +129,7 @@
     flex: 0 0 38%;
     height: 100%;
     min-height: 0;
-    background: linear-gradient(90deg, var(--botanical-start), var(--botanical-end));
+    background: linear-gradient(145deg, var(--botanical-start) 0%, var(--botanical-end) 56%, var(--sage-panel-end) 100%);
   }
 
   .botanical-copy-block {
@@ -137,7 +147,7 @@
   }
 
   .registration-botanical-panel {
-    background: linear-gradient(90deg, var(--registration-botanical-start) 0%, var(--registration-botanical-mid) 55%, var(--registration-botanical-end) 100%);
+    background: linear-gradient(120deg, var(--registration-botanical-start) 0%, var(--registration-botanical-mid) 52%, var(--sage-panel-end) 100%);
   }
 
   .registration-botanical-panel .botanical-art { opacity: 1; }

@@ -23,7 +23,7 @@ export function OtpResendControls({ secondsLeft, resendSecondsLeft, loading, onR
         type="button"
         disabled={loading || resendSecondsLeft > 0}
         onClick={onResend}
-        className="font-semibold text-login-primary underline underline-offset-4 hover:text-brand-dark disabled:cursor-not-allowed disabled:text-login-muted disabled:no-underline"
+        className="font-semibold text-login-primary underline underline-offset-4 hover:text-sage-dark disabled:cursor-not-allowed disabled:text-login-muted disabled:no-underline"
       >
         {resendSecondsLeft > 0 ? `ارسال مجدد کد (${formatTimer(resendSecondsLeft)})` : "ارسال مجدد کد"}
       </button>

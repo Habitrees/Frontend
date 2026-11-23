@@ -32,9 +32,9 @@ export function BotanicalWelcome({
       <img className="botanical-art shrink-0 object-contain" src={imageSrc} alt={imageAlt} width={440} height={440} />
       <p className={`mt-4 text-label ${headingClass}`}>هر روز، یک برگ تازه</p>
       <div className="mt-3 flex items-center gap-1.5" aria-hidden="true">
-        <span className="size-[5px] rounded-full bg-login-primary/40" />
-        <span className="h-[5px] w-6 rounded-full bg-login-primary" />
-        <span className="size-[5px] rounded-full bg-login-primary/40" />
+        <span className="size-[5px] rounded-full bg-sage/40" />
+        <span className="h-[5px] w-6 rounded-full bg-sage" />
+        <span className="size-[5px] rounded-full bg-sage/40" />
       </div>
     </aside>
   );
