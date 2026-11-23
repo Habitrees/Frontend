@@ -1,0 +1,636 @@
+/* Exact-layout adaptation of the supplied Figma Make CSS. Scoped to this feature only.
+   Tokens (--brand, --brand-dark, --background, --font-primary) come from src/index.css. */
+.habits-page { width:100%; max-width:1216px; margin-inline:auto; min-width:0; color:var(--habits-ink); font-family:var(--font-primary); font-synthesis:none; }
+.habits-page, .habits-page *, .habits-page *::before, .habits-page *::after { box-sizing:border-box; }
+.habits-page button, .habits-page input, .habits-page select { font:inherit; }
+.habits-page button, .habits-page select { cursor:pointer; }
+.habits-page button:focus-visible, .habits-page input:focus-visible, .habits-page select:focus-visible { outline:2px solid var(--brand); outline-offset:2px; }
+.habits-page button:disabled { cursor:not-allowed; opacity:.65; }
+.habits-page button:hover:not(:disabled) { filter:brightness(.98); }
+.habits-page .profile { user-select:none; }
+.habits-page { display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--background); }
+.habits-page .application { min-width: 0;
+  flex: 1; }
+.habits-page .topbar { display: flex;
+  height: 76px;
+  align-items: center;
+  gap: 16px;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--habits-border); }
+.habits-page .profile { display: flex;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  color: var(--habits-primary);
+  background: var(--habits-soft);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.9; }
+.habits-page .icon-button,
+.habits-page .ellipsis { display: flex;
+  padding: 0;
+  border: 0;
+  background: transparent; }
+.habits-page .icon-button img { width: 22px;
+  height: 22px; }
+.habits-page .topbar-title { min-width: 0;
+  flex: 1;
+  text-align: right;
+  font-family: var(--font-primary);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--habits-ink); }
+.habits-page .brand-title,
+.habits-page .brand-mark,
+.habits-page .tablet-nav,
+.habits-page .bottom-nav,
+.habits-page .responsive-heading,
+.habits-page .responsive-streak,
+.habits-page .mobile-button-label { display: none; }
+.habits-page .page-content { display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px; }
+.habits-page .intro { display: flex;
+  align-items: center;
+  gap: 16px; }
+.habits-page .new-habit { display: flex;
+  width: max-content;
+  height: 48px;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 24px;
+  border: 0;
+  border-radius: 12px;
+  color: var(--on-primary);
+  background: var(--habits-primary);
+  font-family: var(--font-primary);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.9;
+  white-space: nowrap; }
+.habits-page .new-habit img { width: 18px;
+  height: 18px; }
+.habits-page .intro-copy { min-width: 0;
+  flex: 1;
+  text-align: right; }
+.habits-page .intro-copy h1 { margin: 0;
+  color: var(--brand-dark);
+  font-family: var(--font-primary);
+  font-size: 26px;
+  font-weight: 800;
+  line-height: normal; }
+.habits-page .intro-copy p { margin: 4px 0 0;
+  color: var(--habits-muted);
+  font-size: 14px;
+  line-height: 1.9; }
+.habits-page .filters { display: flex;
+  align-items: flex-end;
+  gap: 16px; }
+.habits-page .filters label { display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: right; }
+.habits-page .filters label > span:first-child { color: var(--habits-muted);
+  font-size: 12px;
+  line-height: 1.9; }
+/* Custom, keyboard-operable dropdown matching the Figma field, not the OS select menu. */
+.habits-page .sort-control {
+  position: relative;
+  display: flex;
+  width: 188px;
+  flex: 0 0 188px;
+  flex-direction: column;
+  gap: 8px;
+  text-align: right;
+}
+.habits-page .sort-label {
+  color: var(--habits-muted);
+  font-size: 12px;
+  line-height: 1.9;
+}
+.habits-page .sort-trigger {
+  display: flex;
+  width: 100%;
+  height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--habits-border);
+  border-radius: 12px;
+  background: var(--input-surface);
+  color: var(--habits-ink);
+  font-size: 12px;
+  text-align: right;
+}
+.habits-page .sort-trigger img { width: 16px; height: 16px; transition: transform 150ms; }
+.habits-page .sort-trigger img.rotate { transform: rotate(180deg); }
+.habits-page .sort-options {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 4px);
+  right: 0;
+  width: 100%;
+  padding: 4px;
+  border: 1px solid var(--habits-border);
+  border-radius: 12px;
+  background: var(--input-surface);
+  box-shadow: 0 8px 28px var(--habits-menu-shadow);
+}
+.habits-page .sort-options button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--habits-ink);
+  text-align: right;
+  font-size: 12px;
+}
+.habits-page .sort-options button:hover,
+.habits-page .sort-options button:focus-visible {
+  background: var(--habits-soft);
+}
+.habits-page .sort-options button[aria-selected="true"] {
+  color: var(--habits-primary);
+  font-weight: 700;
+}
+.habits-page .search-control { min-width: 0; flex: 1; }
+.habits-page .search-control > div { width: 100%; gap: 8px; }
+.habits-page .search-control label {
+  color: var(--brand-dark);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  text-align: right;
+}
+.habits-page .search-control > div > div {
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--habits-search-border);
+  border-radius: 16px;
+  background: var(--background);
+}
+.habits-page .search-control input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  color: var(--habits-primary);
+  background: transparent;
+  font-size: 14px;
+  text-align: right;
+}
+.habits-page .search-control input::placeholder { color: var(--habits-primary); opacity: 1; }
+.habits-page .search-control > div > div:focus-within {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.habits-page .tabs { display: flex;
+  gap: 8px;
+  direction: ltr; }
+.habits-page .tabs button { min-width: 0;
+  min-height: 48px;
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--habits-border);
+  border-radius: 12px;
+  color: var(--habits-subtle-text);
+  background: var(--input-surface);
+  font-size: 14px;
+  line-height: 1.9;
+  text-align: center; }
+.habits-page .tabs button.selected { border-color: var(--habits-primary);
+  color: var(--habits-primary);
+  background: var(--habits-soft);
+  font-family: var(--font-primary);
+  font-weight: 700; }
+.habits-page .habit-list { display: flex;
+  flex-direction: column;
+  gap: 12px; }
+.habits-page .habit-card { display: grid;
+  grid-template-columns: 142px 60px 74px 172px minmax(100px, 1fr) 204px;
+  gap: 24px;
+  min-width: 0;
+  height: 110px;
+  align-items: center;
+  padding: 14px;
+  overflow: visible;
+  border: 1px solid var(--habits-border);
+  border-radius: 20px;
+  background: var(--input-surface);
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--brand-dark) 3%, transparent); }
+.habits-page .desktop-menu { position: relative; align-self: center; }
+.habits-page .habit-card.menu-open { z-index: 10; }
+.habits-page .desktop-menu > .menu-panel {
+  position: absolute;
+  z-index: 12;
+  top: calc(100% + 8px);
+  left: 0;
+  box-shadow: 0 8px 28px var(--habits-menu-shadow);
+}
+.habits-page .desktop-menu .ellipsis { width: 22px;
+  height: 22px; }
+.habits-page .menu-panel {
+  display: flex;
+  width: max-content;
+  flex-direction: row;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--habits-border);
+  border-radius: 12px;
+  background: var(--input-surface);
+}
+.habits-page .menu-panel button {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  color: var(--habits-ink);
+  background: transparent;
+}
+.habits-page .menu-panel button:hover { background: var(--habits-soft); }
+.habits-page .menu-panel button:focus-visible,
+.habits-page .ellipsis:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.habits-page .menu-panel button img { width: 18px; height: 18px; }
+.habits-page .menu-panel button.delete { color: var(--habits-danger); }
+.habits-page .plant { display: block;
+  width: 60px;
+  height: 60px; }
+.habits-page .plant img { display: block;
+  width: 60px;
+  height: 60px;
+  object-fit: contain; }
+.habits-page .desktop-streak { display: flex;
+  width: 74px;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--habits-primary);
+  text-align: right; }
+.habits-page .desktop-streak img { width: 18px;
+  height: 18px; }
+.habits-page .desktop-streak strong { font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.9; }
+.habits-page .weekly { display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+  text-align: right; }
+.habits-page .weekly > span,
+.habits-page .progress > span { color: var(--habits-muted);
+  font-size: 12px;
+  line-height: 1.9; }
+.habits-page .week { display: flex;
+  justify-content: flex-end;
+  gap: 7px; }
+.habits-page .day { display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px; }
+.habits-page .day > span { color: var(--habits-muted);
+  font-size: 12px;
+  line-height: 1.9; }
+.habits-page .day i { display: flex;
+  width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--habits-soft); }
+.habits-page .day i.checked { background: var(--habits-primary); }
+.habits-page .day i img { width: 11px;
+  height: 11px; }
+.habits-page .progress { display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+  text-align: right; }
+.habits-page .progress > span { color: var(--habits-subtle-text); }
+.habits-page .progress-track { position: relative;
+  width: 100%;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--habits-soft); }
+.habits-page .progress-track i { position: absolute;
+  top: 0;
+  right: 0;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--habits-primary); }
+.habits-page .progress small { display: none; }
+.habits-page .desktop-identity { display: flex;
+  width: 204px;
+  align-items: center;
+  gap: 12px;
+  text-align: right; }
+.habits-page .desktop-identity > div { display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px; }
+.habits-page .desktop-identity strong,
+.habits-page .habit-name strong { font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.9; }
+.habits-page .desktop-identity span,
+.habits-page .habit-name span { color: var(--habits-muted);
+  font-size: 12px;
+  line-height: 1.9; }
+.habits-page .desktop-identity img { width: 26px;
+  height: 26px; }
+.habits-page .list-footer { display: flex;
+  align-items: center;
+  gap: 12px; }
+.habits-page .list-footer button { height: 48px;
+  min-height: 48px;
+  padding: 8px 24px;
+  border: 1px solid var(--habits-pagination-border);
+  border-radius: 12px;
+  color: var(--brand-dark);
+  background: var(--background);
+  font-family: var(--font-primary);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.9; }
+.habits-page .list-footer span { min-width: 0;
+  flex: 1;
+  color: var(--habits-muted);
+  font-size: 12px;
+  line-height: 1.9;
+  text-align: right; }
+.habits-page .brand-mark { width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: var(--brand); }
+.habits-page .brand-mark img { width: 26px;
+  height: 26px; }
+@media (max-width: 1199px) and (min-width: 1024px) {
+.habits-page .habit-card { gap: 14px;
+    grid-template-columns: 120px 60px 64px 162px minmax(80px, 1fr) 184px; }
+}
+@media (max-width: 1023px) {
+.habits-page .desktop-title,
+.habits-page .desktop-menu,
+.habits-page .desktop-streak,
+.habits-page .desktop-identity { display: none; }
+.habits-page .brand-title,
+.habits-page .brand-mark,
+.habits-page .tablet-nav,
+.habits-page .responsive-heading,
+.habits-page .responsive-streak { display: flex; }
+.habits-page .brand-title { color: var(--brand); }
+.habits-page .tablet-nav { justify-content: space-between;
+    padding: 12px 28px; }
+.habits-page .tablet-nav a, .habits-page .tablet-nav span { color: var(--habits-muted);
+    text-decoration: none;
+    font-family: var(--font-primary);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.9; }
+.habits-page .tablet-nav a.active, .habits-page .tablet-nav span.active { color: var(--habits-primary); }
+.habits-page .page-content { gap: 20px;
+    padding: 28px; }
+.habits-page .habit-list { gap: 20px; }
+.habits-page .habit-card { display: grid;
+    height: 253px;
+    grid-template-columns: 96px 1fr;
+    grid-template-rows: 55px 82px 72px;
+    gap: 12px 16px;
+    align-items: center;
+    padding: 16px; }
+.habits-page .responsive-heading { grid-column: 1 / -1;
+    gap: 12px;
+    align-items: center; }
+.habits-page .responsive-heading .ellipsis { width: 22px;
+    height: 22px;
+    flex: 0 0 22px; }
+.habits-page .habit-name { display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+    text-align: right; }
+.habits-page .habit-symbol { display: flex;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: var(--habits-soft); }
+.habits-page .habit-symbol.water { background: var(--habits-water-surface); }
+.habits-page .habit-symbol img { width: 22px;
+    height: 22px; }
+.habits-page .plant { width: 70px;
+    height: 70px;
+    grid-column: 1;
+    grid-row: 2; }
+.habits-page .plant img { width: 70px;
+    height: 70px;
+    object-fit: contain; }
+.habits-page .progress { grid-column: 2;
+    grid-row: 2; }
+.habits-page .progress small { display: block;
+    color: var(--habits-primary);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.9; }
+.habits-page .responsive-streak { grid-column: 1;
+    grid-row: 3;
+    flex-direction: column;
+    align-items: flex-start;
+    color: var(--habits-primary);
+    text-align: right; }
+.habits-page .responsive-streak strong { width: 100%;
+    font-family: var(--font-primary);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.9; }
+.habits-page .responsive-streak span { width: 100%;
+    color: var(--habits-muted);
+    font-size: 12px;
+    line-height: 1.9; }
+.habits-page .weekly { grid-column: 2;
+    grid-row: 3; }
+}
+@media (max-width: 639px) {
+.habits-page .topbar { padding: 0 20px; }
+.habits-page .topbar-title { font-family: var(--font-primary);
+    font-size: 18px;
+    font-weight: 700; }
+.habits-page .tablet-nav { display: none; }
+.habits-page .page-content { gap: 20px;
+    padding: 20px; }
+.habits-page .intro { flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 20px; }
+.habits-page .intro-copy { width: 100%; }
+.habits-page .desktop-button-label { display: none; }
+.habits-page .mobile-button-label { display: inline; }
+.habits-page .filters { gap: 16px; }
+.habits-page .sort-control { width: 118px;
+    flex-basis: 118px; }
+.habits-page .tabs button { padding: 10px 4px;
+    white-space: nowrap; }
+.habits-page .list-footer { gap: 12px; }
+.habits-page .list-footer button { padding: 8px 20px; }
+.habits-page .bottom-nav { display: flex;
+    gap: 8px;
+    padding: 12px 12px 22px;
+    border-top: 1px solid var(--habits-border);
+    background: var(--input-surface); }
+.habits-page .bottom-nav a, .habits-page .bottom-nav > span { display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--habits-muted);
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 1.9; }
+.habits-page .bottom-nav a.active, .habits-page .bottom-nav > span.active {
+    color: var(--habits-primary);
+}
+.habits-page .bottom-nav img { width: 22px;
+    height: 22px; }
+}
+@media (max-width: 389px) {
+.habits-page .page-content { padding-right: 14px;
+    padding-left: 14px; }
+.habits-page .topbar { gap: 12px;
+    padding-right: 14px;
+    padding-left: 14px; }
+.habits-page .filters { gap: 10px; }
+.habits-page .sort-control { width: 108px;
+    flex-basis: 108px; }
+.habits-page .habit-card { grid-template-columns: 88px minmax(0, 1fr);
+    column-gap: 10px; }
+.habits-page .week { gap: 5px; }
+}
+
+.habits-page .habit-card { position:relative; }
+.habits-page .responsive-heading { position:relative; }
+.habits-page .responsive-menu-panel { position:absolute; top:42px; left:0; z-index:5; }
+.habits-page .page-notice, .habits-page .page-state { padding:16px; border:1px solid var(--habits-border); border-radius:12px; text-align:center; }
+.habits-page .page-notice { display:flex; justify-content:space-between; align-items:center; gap:16px; color:var(--brand-dark); }
+.habits-page .page-notice p { margin:0; }
+.habits-page .page-notice button { color:var(--brand-dark); text-decoration:underline; }
+.habits-page .habit-card.is-busy { opacity:.6; pointer-events:none; }
+.habits-page .bottom-nav { direction:ltr; }
+
+.habits-page .tablet-nav > span { color:var(--habits-muted); font-size:14px; line-height:1.9; font-weight:700; }
+.habits-page .tablet-nav > span.active { color:var(--habits-primary); }
+@media (min-width:1024px){.habits-page .responsive-menu-panel{display:none;}}
+@media (max-width:1023px){.habits-page .responsive-menu-panel .menu-panel{box-shadow:0 8px 28px var(--habits-menu-shadow);}}
+
+/* Unavailable destinations are intentionally non-interactive; links are real routes. */
+.habits-page .tablet-nav [aria-disabled="true"],
+.habits-page .bottom-nav [aria-disabled="true"] { cursor: default; }
+.habits-page .tablet-nav a:focus-visible,
+.habits-page .bottom-nav a:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Accessible, native modal for demo-only edit; does not change the Figma page layout. */
+.habits-page .habit-edit-dialog {
+  width: min(430px, calc(100vw - 32px));
+  max-height: min(90vh, 640px);
+  overflow-y: auto;
+  margin: auto;
+  padding: 24px;
+  border: 1px solid var(--habits-border);
+  border-radius: 16px;
+  color: var(--habits-ink);
+  background: var(--input-surface);
+  box-shadow: 0 14px 46px var(--habits-menu-shadow);
+}
+.habits-page .habit-edit-dialog::backdrop { background: color-mix(in srgb, var(--habits-ink) 55%, transparent); }
+.habits-page .habit-edit-dialog h2 { margin: 0; color: var(--brand-dark); font-size: 20px; font-weight: 700; }
+.habits-page .habit-edit-dialog > p { margin: 8px 0 20px; color: var(--habits-muted); font-size: 13px; }
+.habits-page .habit-edit-dialog form { display: flex; flex-direction: column; gap: 18px; }
+.habits-page .habit-edit-dialog .edit-error { color: var(--feedback-error); font-size: 13px; }
+.habits-page .habit-edit-dialog .edit-actions { display: flex; gap: 10px; }
+.habits-page .habit-edit-dialog .edit-actions button { flex: 1; width: auto; min-width: 0; }
+.habits-page .habit-edit-dialog .edit-actions > button:first-child {
+  border: 1px solid var(--habits-border); border-radius: 12px;
+  background: var(--input-surface); color: var(--brand-dark);
+}
+.habits-page .habit-edit-dialog .edit-actions > button:first-child:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* Keep the three-dot action trigger visible at all three Figma breakpoints. */
+.habits-page .ellipsis img { display: block; width: 22px; height: 22px; flex: 0 0 22px; }
+
+/* Shared Input owns the outer focus state. Do not draw a second rectangular
+   browser outline around the inner input, especially in the edit dialog. */
+.habits-page .habitree-auth-input:focus-visible { outline: none; }
+.habits-page .habit-edit-dialog .edit-cancel {
+  border: 1px solid var(--habits-border);
+  border-radius: 12px;
+  box-shadow: none;
+  background: var(--input-surface);
+  color: var(--brand-dark);
+}
+.habits-page .habit-edit-dialog .edit-cancel:hover:not(:disabled) {
+  background: var(--habits-soft);
+  box-shadow: none;
+}
+
+/* Mock deletion confirmation: reuse shared Button and the existing dialog design tokens. */
+.habits-page .habit-delete-dialog {
+  width: min(430px, calc(100vw - 32px));
+  max-height: min(90vh, 640px);
+  overflow-y: auto;
+  margin: auto;
+  padding: 24px;
+  border: 1px solid var(--habits-border);
+  border-radius: 16px;
+  color: var(--habits-ink);
+  background: var(--input-surface);
+  box-shadow: 0 14px 46px var(--habits-menu-shadow);
+}
+.habits-page .habit-delete-dialog::backdrop { background: color-mix(in srgb, var(--habits-ink) 55%, transparent); }
+.habits-page .habit-delete-dialog h2 { margin: 0; color: var(--brand-dark); font-size: 20px; font-weight: 700; }
+.habits-page .habit-delete-dialog p { margin: 12px 0 24px; color: var(--habits-muted); font-size: 15px; line-height: 1.9; }
+.habits-page .habit-delete-dialog .delete-actions { display: flex; gap: 10px; }
+.habits-page .habit-delete-dialog .delete-actions button { flex: 1; width: auto; min-width: 0; }
+.habits-page .habit-delete-dialog .delete-cancel {
+  border: 1px solid var(--habits-border);
+  background: var(--input-surface);
+  color: var(--brand-dark);
+  box-shadow: none;
+}
+.habits-page .habit-delete-dialog .delete-cancel:hover:not(:disabled) {
+  background: var(--habits-soft);
+  box-shadow: none;
+}
+
+.habits-page .habit-delete-dialog .delete-error { color: var(--feedback-error); margin-top: -12px; font-size: 13px; }

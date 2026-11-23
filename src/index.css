@@ -8,6 +8,36 @@
   --muted: #ad9ca1;
   --background: #fffcf9;
 
+
+  /* Shared component tokens copied from the established e2e.zip design system.
+     Keep the pre-existing --accent value: no global recoloring in this feature. */
+  --sage: #71977b;
+  --sage-border: #b5ceba;
+  --login-primary: #7d485c;
+  --login-text: #373034;
+  --login-muted: #7b7075;
+  --input-surface: #ffffff;
+  --input-border: #e2dada;
+  --input-placeholder: #78686f;
+  --on-primary: #ffffff;
+  --feedback-error: #a12d47;
+  --login-button-shadow: 0 8px 16px rgb(100 57 74 / 13%);
+  --registration-button-shadow: 0 8px 16px rgb(141 66 92 / 13%);
+
+  /* Exact colors obtained from the supplied My Habits Figma Make stylesheet.
+     Local semantic tokens prevent scattered color literals in the feature. */
+  --habits-primary: #84465b;
+  --habits-ink: #392c31;
+  --habits-muted: #8d7a81;
+  --habits-subtle-text: #75616a;
+  --habits-border: #e9dfdf;
+  --habits-soft: #f5eaef;
+  --habits-search-border: #dab2c4;
+  --habits-danger: #ad4355;
+  --habits-pagination-border: #ebdde2;
+  --habits-water-surface: #eef1f8;
+  --habits-menu-shadow: #6e294822;
+
   --font-primary: "Vazirmatn Variable", sans-serif;
 }
 
@@ -18,5 +48,29 @@
   --color-surface-soft: var(--surface-soft);
   --color-muted: var(--muted);
   --color-background: var(--background);
+
+  /* Compatible with the unchanged shared Button and Input from e2e.zip. */
+  --color-sage: var(--sage);
+  --color-sage-border: var(--sage-border);
+  --color-login-primary: var(--login-primary);
+  --color-login-text: var(--login-text);
+  --color-login-muted: var(--login-muted);
+  --color-input-surface: var(--input-surface);
+  --color-input-border: var(--input-border);
+  --color-input-placeholder: var(--input-placeholder);
+  --color-on-primary: var(--on-primary);
+  --color-feedback-error: var(--feedback-error);
+  --shadow-login-button: var(--login-button-shadow);
+  --shadow-registration-button: var(--registration-button-shadow);
   --font-sans: var(--font-primary);
+}
+
+/* Same text scale used by the original e2e.zip shared components. */
+@theme {
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.7;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.55;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.6;
 }

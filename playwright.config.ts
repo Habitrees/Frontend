@@ -2,11 +2,17 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./e2e",
-  reporter: "list",
+  reporter: [
+    ["list"],
+    ["html", { outputFolder: "playwright-report", open: "never" }],
+  ],
 
   use: {
     baseURL: "http://127.0.0.1:5173",
     ...devices["Desktop Chrome"],
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
+    trace: "retain-on-failure",
   },
 
   webServer: {

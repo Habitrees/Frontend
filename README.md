@@ -1,75 +1,33 @@
-# React + TypeScript + Vite
+# Habitree Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend for the Habitree habit-tracking project: React, TypeScript, Vite and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm ci
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+The current feature branch `feat/my-habits` provides the **mock-only My Habits** screen at `http://localhost:5173/my-habits`. It does not need a Django backend for the preview. The three-dot menu exposes icon-only edit/delete actions; edit opens a temporary mock dialog, and delete requires confirmation. The three named botanical PNGs are bundled from `src/features/habits/assets/plants/` (bluebell/daisy/lavender); the earlier placeholder plant SVGs were removed. The Figma SVG UI icons and supplied PNG plants are bundled via static Vite imports, so missing assets are caught by the build. The action popup closes when clicking outside it or pressing Escape.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Quality checks
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm run lint
+npm run build
+npm run test:e2e
 ```
+
+Playwright may require `npx playwright install chromium` on first use. CI runs the same checks. Failure artifacts are generated locally but intentionally ignored by Git.
+
+## Documentation
+
+- [My Habits: full feature documentation, tests, acceptance criteria, results and limitations](docs/my-habits.md)
+- [Frontend Docker](docs/frontend-docker.md) — infrastructure guide retained from the existing project
+
+## Merge and security
+
+`feat/authentication` is a separate branch. Preserve its routes, shared components and styles during merge; see the merge section in the My Habits documentation. The mock screen is **not** protected by an auth guard yet and must not display real user data before authenticated routing and Django authorization are integrated. The Figma file is read-only.
+
+**My Habits mock UI:** deletion requires an accessible in-page confirmation dialog (no browser `window.confirm`); sorting uses a styled keyboard-accessible dropdown. See `docs/my-habits.md` for acceptance criteria.
