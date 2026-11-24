@@ -1,89 +1,59 @@
-# Habitree — «عادت‌های من» (Mock MVP)
+# My Habits
 
-## Scope and visual source
+## Overview
 
-This feature implements **only** `/my-habits` on `feat/my-habits`; no desktop sidebar, authentication screens, dashboard redesign or additional check-in forms. Visual references are the Desktop / Tablet / Mobile screenshots from Figma Make, its original UI icon SVGs and the three subsequently supplied botanical PNGs, not an invented interface. Figma is **read-only** and was not changed. Direct pixel-by-pixel comparison with the source Figma file remains unverified.
+My Habits is the daily workspace for personal habits and group challenges. The page is available at `/my-habits` and currently uses an in-memory repository. It is designed for Persian (RTL) interfaces and adapts to mobile, tablet and desktop screens.
 
-- **Desktop (≥1024px):** compact horizontal habit rows.
-- **Tablet (640–1023px):** responsive cards with rearranged content and tablet navigation.
-- **Mobile (<640px):** stacked cards and bottom navigation; avoid horizontal overflow.
-- Use normal browser zoom (100%), RTL text, the bundled Vazirmatn font, and the existing `--habits-*` design tokens in `src/index.css`. The feature stylesheet is scoped in `src/features/habits/habits.css`.
-- Original UI icon SVGs and the three user-supplied botanical PNGs are in `src/features/habits/assets/`. Decorative images have empty `alt`; meaningful plant images have descriptive `alt`.
+## Functionality
 
-## Architecture, paths and reusability
-
-| Path | Responsibility |
+| Feature | Behavior |
 | --- | --- |
-| `src/app/router.tsx` | Existing router plus `/my-habits` registration |
-| `src/features/habits/HabitsPage.tsx` | Page semantics, UI state, controls and mock actions |
-| `src/features/habits/components/` | `HabitsHeader`, `HabitFilters`, `HabitSortDropdown`, `HabitCard`, `EditHabitDialog`, `DeleteHabitDialog`, asset mapping |
-| `src/features/habits/types.ts` | Typed Habit view model and discriminated measurement union |
-| `src/features/habits/data/mockHabits.ts` | Five demo habits used in the Figma Make design |
-| `src/features/habits/utils/habitFilters.ts` | Pure query/status/sort/pagination helpers |
-| `src/features/habits/hooks/useHabits.ts` | Async state, error/loading, reload and delete |
-| `src/features/habits/services/` | Repository interface; in-memory and HTTP adapters |
-| `src/shared/components/{Button,Input}.tsx` | Reused reference components from `e2e.zip` |
-| `src/index.css` | Shared and semantic habit tokens |
+| Today | Shows active habits scheduled for the current day, including personal and group check-ins. |
+| All | Shows all habits, including upcoming occurrences and completed periods. |
+| Completed | Shows finished habit periods, rather than habits that have only been checked off today. |
+| Daily check-in | Records a successful occurrence with one action. An active habit's check-in can be undone. Successful check-ins are sorted after pending habits. |
+| Progress | Displays successful occurrences relative to planned occurrences, along with the current streak. |
+| Upcoming occurrences | Displays the next scheduled date for habits that are not due today. |
+| Sorting and pagination | Supports newest/oldest ordering within completion groups and five habits per page. |
+| Habit management | Personal habits can be edited or deleted. Editing validates input; deletion requires confirmation. Group members can record their own progress but cannot edit or delete the shared challenge here. |
 
-The search control and "عادت جدید" button reuse the shared `Input` and `Button` from the Authentication reference rather than reimplementing them. The feature retains its own scoped layout CSS to match the Figma Make designs. The code uses React + TypeScript + Tailwind host integration, native controls, one visible `<h1>`, labels, keyboard-accessible actions, responsive layout, and accessible notifications.
+Goals may be duration-based, count-based or binary. Recording an occurrence is binary for all goal types. An unrecorded occurrence is pending, not an explicit failure. Completion feedback uses Motion and canvas-confetti with reduced-motion support.
 
-## Mock behavior (today)
+## Implementation
 
-Search (habit title), status tabs, newest/oldest sorting with a custom keyboard-accessible dropdown, pagination and action menus operate on an in-memory repository. All cards start with a collapsed three-dot menu; it opens a **two-icon-only** edit/delete popover with accessible button names. The edit action opens a keyboard-accessible native modal (`<dialog>`) using the existing shared `Input`/`Button`, React Hook Form and Zod; saving changes only title/subtitle in memory. Escape/cancel closes the modal without saving. Delete opens a centered, accessible native `<dialog>` confirmation styled with project tokens. Cancelling or pressing Escape leaves mock data unchanged; only explicit confirmation deletes the habit. No browser `window.confirm` is used. Repository errors do not silently close the dialog. Reloading the page resets demonstration data. The **new-habit** control still shows a notice until its separate page/route is implemented. The Figma design has no in-card check-in form; **do not add one solely for tests**. Progress, Streak and plant stage are demonstration fields; the frontend does not calculate authoritative business rules.
+The feature is located in `src/features/habits/`.
 
-**Assets:** There are **23 retained Figma Make icon SVGs** (`src/features/habits/assets/icons/{desktop,responsive}/*.svg`) and **3 user-provided plant PNGs** (`src/features/habits/assets/plants/{bluebell,daisy,lavender}.png`). All icons and plants are statically imported in `components/habitAssets.ts`; Vite bundles them with hashed, base-aware URLs and missing files fail the build. The eight obsolete plant SVG files were removed. No external image URL is required.
-
-## Future API boundary / integration
-
-`HabitsRepository` defines `getHabits`, `recordHabit`, `updateHabit`, `deleteHabit`. `MockHabitsRepository` is used for the present mock screen; `HttpHabitsRepository` accepts an injected Axios instance and injected endpoint paths (including a future edit route), without guessing a Django endpoint. The `Habit` type is a UI view model **not** a confirmed Django serializer. Agree on the DTO and map responses before enabling the real adapter. Django owns Streak calculations (Strict/Flexible), validation, plant stages and per-user authorization. Never include secrets/tokens in client source.
-
-**Merge rules:** `feat/authentication` was a separate branch and is not merged here. Keep all Login/Register/Recovery routes when integrating `/my-habits`; resolve the likely router-import conflict instead of replacing the full Router. Deduplicate the shared `Button`/`Input`, merge `index.css` tokens selectively, and reconcile the two Axios client locations. The current `/my-habits` route has **no Auth Guard**; apply the authenticated-route mechanism after merging Authentication, before showing real personal records.
-
-## Testing and acceptance
-
-The test plan, acceptance criteria, commands, verified outcomes and limitations are documented **in this file below**. Tests prioritize user behavior and relevant Mandatory Core criteria instead of brittle pixel details. Existing CI / Playwright configuration is retained; failure artifacts are not part of the Git commit.
-
-### Feature-level compliance (checked against project contract and Mandatory Core)
-
-- [x] Feature-Based architecture, React/TS, reusable shared controls, semantic markup, correct `h1`.
-- [x] Mock data boundary and injectable HTTP adapter; backend rules kept out of the UI.
-- [x] Desktop/tablet/mobile layouts implemented with Figma Make references; no sidebar or extra form.
-- [x] Playwright functional flows, edit and confirmed mock deletion, image loading and responsive checks included; CI configured to execute them.
-- [x] README, consolidated feature/testing document, and executable test files included.
-- [ ] Exact live comparison with three **original** Figma frames and complete keyboard/screen-reader audit not verified.
-- [ ] Protected route and real API integration require the Authentication/backend branches.
-- [ ] Final build, lint and Playwright execution for **this patch**: record actual outputs before claiming success.
-
-The remaining 35 Mandatory Core items are **project-wide**, not all obligations of this single mock feature. Backend/API security, database, Docker deployment, HTTPS, reporting/architecture diagrams, monitoring and final CI branch-protection must be verified by their responsible workstreams; no unsupported passing claim is made here.
-
-
----
-
-## Testing & Quality Assurance — Mock MVP
-
-### Testing objective
-
-The Mandatory Core requires real user flows in Playwright/Cypress, failure screenshots and reporting, and a CI run that blocks on errors. These tests validate the **mock feature** without a backend. They do **not** validate JWT, Django business rules, server permissions or real API availability. The project-level requirement of at least **three complete E2E user journeys** must be evaluated across the integrated product after Authentication and API integration; tests within this feature contribute flows but cannot claim the whole project requirement is finished.
-
-### Browser E2E — `e2e/my-habits.spec.ts`
-
-| Scenario | Acceptance criteria |
+| File or directory | Responsibility |
 | --- | --- |
-| Open My Habits | `/my-habits` loads, exactly one main `h1`, five mock cards, labeled search and status controls; no sidebar or unexpected check-in form |
-| Search/filter/empty | Query narrows habits; completed tab selects correct mock state; nonexistent search shows a user-facing empty state |
-| Sorting/pagination | Oldest-first order is correct; next/previous disabled when only one page exists |
-| Actions/delete | Three-dot menu starts closed; opens two accessible icon-only actions, Escape, outside click and keyboard focus outside close it; clicking delete opens an accessible centered confirmation modal, cancelling/Escape preserves the habit, and confirming removes it (without `window.confirm`) |
-| Mock edit | Clicking edit opens a modal; invalid title is rejected; saving modifies title and subtitle and closes it; cancel discards changes |
-| Plant assets | All five cards load the three user-provided, correctly named PNG plant assets in mobile, tablet and desktop breakpoints (natural image width > 0) |
-| Responsive mobile/tablet/desktop | At 390/768/1440px page renders cards and title without horizontal overflow |
+| `HabitsPage.tsx` | Page composition, filters, pagination, dialogs and completion feedback. Accepts an optional repository and create/edit callbacks through `HabitsPageProps`. |
+| `components/` | Habit cards, filter and sort controls, dialogs and feedback. Forms use shared Button/Input components, React Hook Form and Zod. |
+| `hooks/useHabits.ts` | Loads habits and manages asynchronous recording, editing and deletion, including loading and error states. |
+| `types.ts` | Typed habit, ownership, measurement, schedule, progress and occurrence models. |
+| `data/mockHabits.ts` | Demo habits and local calendar-date helpers. |
+| `services/` | Repository interface, in-memory implementation and Axios-based HTTP adapter. |
+| `utils/habitFilters.ts` | Filtering, sorting, pagination and date calculations. |
+| `utils/celebrateHabitCompletion.ts` | Completion animation. |
+| `habits.css`, `assets/` | Responsive styles using shared tokens in `src/index.css`, plant illustrations and icons. |
 
-### Isolated mock tests — `e2e/my-habits-mock.spec.ts`
+### Repository interface
 
-These tests exercise the typed in-memory Repository and pure utilities independently of network/backend: defensive copies, deletion/unknown ID, editing/validation while retaining server-owned stats, search and paging without mutating original fixtures.
+| Method | Purpose |
+| --- | --- |
+| `getHabits(signal?)` | Fetch habit records. |
+| `recordHabit(id, { date, status })` | Record completion or return an eligible occurrence to pending. |
+| `updateHabit(id, { title, subtitle })` | Update a personal habit's title and short description. |
+| `deleteHabit(id)` | Delete a personal habit after confirmation in the UI. |
 
-We intentionally removed pixel-exact button size, checking text absent in a particular header class, six nearly duplicate viewport tests, and implementation-specific CSS classname assertions. Visual fidelity is checked separately against Figma, not equated with E2E behavior tests.
+The page depends on `HabitsRepository`, rather than on a specific API. `MockHabitsRepository` supplies demo data; `HttpHabitsRepository` accepts an Axios instance and endpoint configuration. The HTTP adapter is not enabled by default. Edit validation requires a trimmed title of 2–80 characters and a subtitle of at most 120 characters.
 
-### Commands (from Frontend root)
+## Current limitations and integration
+
+- Mock data resets on reload. Dates are based on the device's local calendar; refreshing is needed to update the mock schedule after midnight.
+- Completing the last planned occurrence closes the mock period. Undo is available for active habits, not for a finished period. Streak counters are illustrative; strict/flexible recovery, missed occurrences, authoritative best streak and growth stages require server-side rules.
+- The create-habit flow, authentication guard, real group permissions and garden integration are not connected to this route yet. The current route is a demo and must not expose real user records without authentication.
+- To enable the API adapter, agree on endpoints, DTO mapping, authentication, authorization, scheduling/time-zone behavior and error responses with the backend. Django must enforce eligibility, ownership, validation and authoritative progress calculations.
+
+## Testing
 
 ```bash
 npm ci
@@ -93,72 +63,10 @@ npm run build
 npm run test:e2e
 ```
 
-To run only this feature:
+| Test file | Coverage |
+| --- | --- |
+| `e2e/home.spec.ts` | Entry route to My Habits. |
+| `e2e/my-habits.spec.ts` | Browser user flows: filtering, upcoming occurrences, pagination, sorting, check-in and undo, editing and validation, confirmed deletion, group access, safe text rendering and mobile check-in. |
+| `e2e/my-habits-mock.spec.ts` | Repository rules: eligible dates, idempotent completion, undo, period completion, validation and group mutation restrictions. |
 
-```bash
-npx playwright test e2e/my-habits.spec.ts e2e/my-habits-mock.spec.ts
-```
-
-CI is configured in `.github/workflows/frontend-ci.yml` to run all checks on push/PR and upload Playwright artifacts. The `playwright.config.ts` captures screenshot/video/trace **only on failure**; generated `playwright-report/` and `test-results/` should not be committed.
-
-### Verified versus pending
-
-- **User-supplied runs prior to this patch:** `npm run build` and `npm run lint` succeeded for earlier code; a later Playwright report contained **11 passed, 0 failed, 0 skipped** (on the previous suite). This is **not** the result of the present changes.
-- **This image/menu/edit patch:** final `npm run lint`, `npm run build` and Playwright outcome must be recorded after running in the checkout. No passing claim should be inferred from previous reports.
-- **Future API tests:** to add once routes, DTO, auth state and permissions exist; mock success does not demonstrate backend security or correctness.
-
-### Before committing
-
-1. Run lint, build and Playwright; capture actual output for review.
-2. Ensure no `.env*`, `node_modules/`, `dist/`, `playwright-report/`, `test-results/` or `.git/` archives enter the commit.
-3. Check visual parity for all 3 designs at browser zoom 100% and keyboard behavior.
-4. Review `git diff --cached`, commit on `feat/my-habits`, and open a PR into `develop` after CI passes.
-
-
-## Git readiness checklist
-
-- [ ] In the local checkout, run `npm run lint`, `npm run build`, `npm run test:e2e`; record real output in the PR. Previous pass reports concern older revisions and are not evidence for this source.
-- [ ] Visually compare Desktop / Tablet / Mobile at 100% zoom against the supplied reference screenshots; verify pointer click-outside, Tab, Escape, editing, deletion and all five plant images.
-- [ ] Check staged files (`git diff --cached --check` and `git diff --cached --stat`). Do not commit `.env*`, `.git`, `node_modules`, `dist`, `test-results` or `playwright-report`.
-- [ ] Open a reviewed PR from `feat/my-habits` to `develop`; only use this feature's mock data until the Authentication and backend permissions are integrated.
-
-### Evidence from isolated checks on this revision
-
-- **Source syntax:** 24 TypeScript/TSX files transpiled with no syntax diagnostics.
-- **Mock data logic:** pure TypeScript compilation and 8 independent assertions passed (data isolation, edit, delete, search and pagination).
-- **Image files:** all 23 retained Figma Make SVG icons and three uploaded PNG botanical illustrations have valid local paths. No old plant SVG assets or public-path dependencies remain in the clean source package.
-- **Full project checks in this workspace:** `npm run lint` could not start (`eslint` unavailable); `npm run build` could not resolve `vite/client` and Node type definitions because npm dependencies were not installed. **Playwright was not run against this revision.** Do not report any of these as passing until they run successfully in the local project.
-
-## Plant assets and action menu behavior
-
-The three user-provided 320×320 transparent images were identified by their actual content:
-
-| Supplied filename | Final asset | Plant | Mock habit mapping |
-| --- | --- | --- | --- |
-| `full.png` | `src/features/habits/assets/plants/bluebell.png` | Bluebell / گل زنگوله‌ای آبی | Water, Sleep |
-| `full (1).png` | `src/features/habits/assets/plants/daisy.png` | Daisy / گل مینا | Exercise |
-| `full (2).png` | `src/features/habits/assets/plants/lavender.png` | Lavender / اسطوخودوس | Study, Mindfulness |
-
-These species assignments are mock visual fixtures, not an implementation of the backend-managed plant-growth rules. The images are the same across responsive breakpoints and use descriptive `alt` text. Eight unused plant SVGs were deleted; UI SVG icons were retained.
-
-The mock deletion action opens a centered confirmation modal and only removes the selected habit after explicit confirmation; cancelling or pressing Escape preserves it. The three-dot popup is initially closed, contains only Edit/Delete SVG icons (accessible `aria-label`s, no visible text or tooltip), and is dismissed by clicking outside its trigger/popup, shifting keyboard focus outside it, or pressing Escape. Clicking inside the popup permits the chosen action to run. The action menu is only one at a time. All behaviors are covered in the **existing** `e2e/my-habits.spec.ts`; no extra spec or documentation files have been created.
-
-### 2026-11-23 — asset loading hotfix (same feature)
-
-The earlier instruction to delete `public/assets/habits` removed original Figma UI icons as well as obsolete plant artwork and caused broken images. This has been corrected by moving the **23 existing Figma SVG UI icons** and the **three user-provided plant PNGs** into `src/features/habits/assets/` and using static imports through `habitAssets.ts`. The new code does not use or require `public/assets/habits`. At build time Vite validates referenced assets; at runtime URLs use Vite's generated asset paths. Existing Playwright file `e2e/my-habits.spec.ts` was updated to assert that every visible icon and plant resolves (`naturalWidth > 0`) at mobile, tablet and desktop widths and that action popups dismiss on outside pointer interaction. No changes were made to auth, Router, shared controls or app tokens. The full test suite must be rerun in the user's local checkout before declaring success.
-
-### 2026-11-23 — final mock UI controls revision
-
-- Delete requires a centered, accessible confirmation modal in the mock UI; there is no `window.confirm` or external route. In the real backend integration, destructive-action product decisions and authorization must be reviewed before deployment.
-- Sorting uses a feature-local, keyboard-accessible custom dropdown (button/listbox, arrow keys, Escape, outside click) to avoid operating-system-dependent native select styling.
-- Shared `Button` and `Input` remain reused in the new-habit action and edit form; the shared Input's outer focus ring is retained while the duplicate inner input outline is suppressed only within My Habits.
-- Playwright assertions in the existing `e2e/my-habits.spec.ts` now cover styled sorting, keyboard dismissal, presence of accessible confirmation, cancellation and absence of browser-native prompts, and input focus. Run lint, build and E2E locally for this exact revision before committing.
-
-## Latest UI review — deletion confirmation and token usage
-
-- Clicking the icon-only delete action opens `DeleteHabitDialog` (native HTML `<dialog>`), with the habit name and explicit **انصراف** / **بله، حذف شود** shared `Button` controls. No deletion occurs until confirmation; Escape and Cancel leave the mock data intact. Confirm performs a repository action; errors keep the dialog visible.
-- The existing shared `Button` is also used for the new-habit action and edit modal; the existing shared `Input` is used for search and edit fields. No new shared component or global CSS change was necessary.
-- Feature colors use existing `src/index.css` design tokens. The former direct `rgba` shadow in `habits.css` was changed to `color-mix` referencing `--brand-dark`; literal color values remain centralized as token definitions in `index.css`.
-- `e2e/my-habits.spec.ts` was updated in-place for confirm/cancel/Escape and the absence of native browser prompts. Re-run actual lint/build/E2E on this revision before checking these items as passed.
-
-- Sort dropdown highlighting: the selected option is indicated by text color/weight and `aria-selected`; the soft background follows only pointer hover or keyboard focus. The existing E2E suite checks that hovering the other option does not leave both options highlighted.
+The browser tests use fixed demo dates and reduced motion for reproducible results. They do not require Django or an external API. Playwright generates an HTML report and retains failure artifacts. Repository-rule tests run in the Playwright runner without using a browser page; they are not end-to-end API tests. Full execution results are available from the local test run or frontend CI.

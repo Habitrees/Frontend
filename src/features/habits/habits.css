@@ -1,636 +1,308 @@
-/* Exact-layout adaptation of the supplied Figma Make CSS. Scoped to this feature only.
-   Tokens (--brand, --brand-dark, --background, --font-primary) come from src/index.css. */
-.habits-page { width:100%; max-width:1216px; margin-inline:auto; min-width:0; color:var(--habits-ink); font-family:var(--font-primary); font-synthesis:none; }
-.habits-page, .habits-page *, .habits-page *::before, .habits-page *::after { box-sizing:border-box; }
-.habits-page button, .habits-page input, .habits-page select { font:inherit; }
-.habits-page button, .habits-page select { cursor:pointer; }
-.habits-page button:focus-visible, .habits-page input:focus-visible, .habits-page select:focus-visible { outline:2px solid var(--brand); outline-offset:2px; }
-.habits-page button:disabled { cursor:not-allowed; opacity:.65; }
-.habits-page button:hover:not(:disabled) { filter:brightness(.98); }
-.habits-page .profile { user-select:none; }
-.habits-page { display: flex;
-  min-height: 100vh;
-  overflow-x: hidden;
-  background: var(--background); }
-.habits-page .application { min-width: 0;
-  flex: 1; }
-.habits-page .topbar { display: flex;
-  height: 76px;
-  align-items: center;
-  gap: 16px;
-  padding: 0 32px;
-  border-bottom: 1px solid var(--habits-border); }
-.habits-page .profile { display: flex;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  color: var(--habits-primary);
-  background: var(--habits-soft);
-  font-family: var(--font-primary);
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.9; }
-.habits-page .icon-button,
-.habits-page .ellipsis { display: flex;
-  padding: 0;
-  border: 0;
-  background: transparent; }
-.habits-page .icon-button img { width: 22px;
-  height: 22px; }
-.habits-page .topbar-title { min-width: 0;
-  flex: 1;
-  text-align: right;
-  font-family: var(--font-primary);
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--habits-ink); }
-.habits-page .brand-title,
-.habits-page .brand-mark,
-.habits-page .tablet-nav,
-.habits-page .bottom-nav,
-.habits-page .responsive-heading,
-.habits-page .responsive-streak,
-.habits-page .mobile-button-label { display: none; }
-.habits-page .page-content { display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 20px; }
-.habits-page .intro { display: flex;
-  align-items: center;
-  gap: 16px; }
-.habits-page .new-habit { display: flex;
-  width: max-content;
-  height: 48px;
-  min-height: 48px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 24px;
-  border: 0;
-  border-radius: 12px;
-  color: var(--on-primary);
-  background: var(--habits-primary);
-  font-family: var(--font-primary);
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.9;
-  white-space: nowrap; }
-.habits-page .new-habit img { width: 18px;
-  height: 18px; }
-.habits-page .intro-copy { min-width: 0;
-  flex: 1;
-  text-align: right; }
-.habits-page .intro-copy h1 { margin: 0;
-  color: var(--brand-dark);
-  font-family: var(--font-primary);
-  font-size: 26px;
-  font-weight: 800;
-  line-height: normal; }
-.habits-page .intro-copy p { margin: 4px 0 0;
-  color: var(--habits-muted);
-  font-size: 14px;
-  line-height: 1.9; }
-.habits-page .filters { display: flex;
-  align-items: flex-end;
-  gap: 16px; }
-.habits-page .filters label { display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-align: right; }
-.habits-page .filters label > span:first-child { color: var(--habits-muted);
-  font-size: 12px;
-  line-height: 1.9; }
-/* Custom, keyboard-operable dropdown matching the Figma field, not the OS select menu. */
-.habits-page .sort-control {
-  position: relative;
-  display: flex;
-  width: 188px;
-  flex: 0 0 188px;
-  flex-direction: column;
-  gap: 8px;
-  text-align: right;
+/* Habitree / My Habits — focused daily check-in.
+   Uses only the shared, real design tokens defined in src/index.css. */
+.habits-page {
+  width: 100%; min-width: 0; min-height: 100vh; margin-inline: auto;
+  color: var(--habits-ink); background: var(--background); font-family: var(--font-primary);
+  font-synthesis: none;
 }
-.habits-page .sort-label {
-  color: var(--habits-muted);
-  font-size: 12px;
-  line-height: 1.9;
+.habits-page, .habits-page *, .habits-page *::before, .habits-page *::after { box-sizing: border-box; }
+.habits-page button, .habits-page input, .habits-page textarea { font: inherit; }
+.habits-page button { cursor: pointer; }
+.habits-page button:disabled { cursor: not-allowed; opacity: .6; }
+.habits-page button:focus-visible, .habits-page textarea:focus-visible,
+.habits-page a:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+.habits-page .application { min-width: 0; }
+
+/* Lightweight app shell: no dashboard and no desktop sidebar. */
+.habits-page .topbar {
+  height: 76px; display: flex; direction: ltr; align-items: center; gap: 16px;
+  padding-inline: max(24px, calc((100% - 1200px) / 2)); border-bottom: 1px solid var(--habits-border); background: var(--input-surface);
 }
+.habits-page .profile {
+  width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center;
+  flex-shrink: 0; color: var(--habits-primary); background: var(--habits-soft); font-weight: 800;
+}
+.habits-page .icon-button { display: inline-flex; align-items: center; }
+.habits-page .icon-button img { width: 22px; height: 22px; }
+.habits-page .topbar-title { margin-inline-start: auto; color: var(--brand); font-weight: 800; font-size: 22px; }
+.habits-page .brand-mark { width: 42px; height: 42px; display: grid; place-items: center; background: var(--brand); border-radius: 13px; }
+.habits-page .brand-mark img { width: 26px; height: 26px; }
+.habits-page .tablet-nav, .habits-page .bottom-nav { display: none; }
+/* Keep a reading-width workspace even on very wide monitors. */
+.habits-page .page-content {
+  display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 1280px;
+  margin-inline: auto; padding: 24px clamp(24px, 4vw, 56px) 40px;
+}
+
+/* Welcome banner: compact and botanical, separate from the daily workflow. */
+.habits-page .welcome-panel {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  min-height: 96px; padding: 16px 26px; border: 1px solid var(--habits-border);
+  border-radius: 20px; background: linear-gradient(105deg, var(--habits-soft), color-mix(in srgb, var(--habits-soft) 65%, var(--input-surface)));
+}
+.habits-page .welcome-panel::before { content: ""; position: absolute; z-index: -1; inset-block-start: -52px; inset-inline-end: -40px; width: 210px; height: 210px; border-radius: 50%; background: color-mix(in srgb, var(--surface-soft) 45%, transparent); }
+.habits-page .welcome-botanical { position: absolute; z-index: -1; inset-inline-end: 0; bottom: -9px; width: 138px; height: 100px; color: var(--sage); opacity: .55; pointer-events: none; }
+.habits-page .welcome-panel > div { display: flex; flex-direction: column; gap: 3px; }
+.habits-page .welcome-panel p { margin: 0; line-height: 1.65; }
+.habits-page .welcome-headline { display: flex; align-items: center; gap: 9px; color: var(--brand-dark); font-size: 22px; font-weight: 800; }
+.habits-page .welcome-headline svg { color: var(--sage); flex-shrink: 0; }
+.habits-page .welcome-panel p:not(.welcome-headline) { color: var(--habits-subtle-text); font-size: 14px; }
+.habits-page .welcome-panel time { flex: 0 0 auto; color: var(--habits-subtle-text); font-size: 12px; align-self: center; padding-inline-end: 108px; }
+
+.habits-page .intro { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.habits-page .intro-copy { min-width: 0; }
+.habits-page .intro h1 { margin: 0; font-weight: 800; font-size: clamp(25px, 2.5vw, 32px); line-height: 1.45; color: var(--brand-dark); }
+.habits-page .intro p { margin: 3px 0 0; font-size: 13px; color: var(--habits-subtle-text); }
+.habits-page .new-habit { width: auto; min-width: 145px; min-height: 46px; height: 46px; padding: 8px 19px; border-radius: 12px; font-size: 14px; white-space: nowrap; }
+
+/* Wide, equally weighted tabs and a compact sort control, like the approved mockup. */
+.habits-page .habit-navigation { display: flex; align-items: center; justify-content: space-between; gap: 12px 22px; }
+.habits-page .tabs { display: flex; flex: 1 1 690px; max-width: 720px; min-width: 0; align-items: stretch; gap: 4px; padding: 4px; border: 1px solid var(--habits-border); border-radius: 14px; background: var(--input-surface); }
+.habits-page .tabs button {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  flex: 1 1 0; min-width: 0; min-height: 46px; padding: 8px 10px; border: 1px solid transparent;
+  border-radius: 10px; background: transparent; color: var(--habits-subtle-text);
+  font-size: 14px; font-weight: 700; white-space: nowrap; transition: background-color .18s;
+}
+.habits-page .tabs button svg { flex-shrink: 0; }
+.habits-page .tabs button.selected { background: var(--brand); color: var(--on-primary); font-weight: 800; }
+.habits-page .tabs button:hover:not(.selected) { background: var(--habits-soft); }
+.habits-page .tab-count { font-size: 12px; font-weight: 600; }
+.habits-page .habit-sort-row { flex: 0 0 185px; }
+.habits-page .sort-control { position: relative; display: flex; flex-direction: column; gap: 4px; text-align: right; }
+.habits-page .sort-label { color: var(--habits-subtle-text); font-size: 11px; }
 .habits-page .sort-trigger {
-  display: flex;
-  width: 100%;
-  height: 48px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 10px 12px;
-  border: 1px solid var(--habits-border);
-  border-radius: 12px;
-  background: var(--input-surface);
-  color: var(--habits-ink);
-  font-size: 12px;
-  text-align: right;
+  width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; padding: 8px 12px; border: 1px solid var(--habits-border);
+  border-radius: 12px; background: var(--input-surface); color: var(--habits-ink); font-size: 13px;
 }
-.habits-page .sort-trigger img { width: 16px; height: 16px; transition: transform 150ms; }
+.habits-page .sort-trigger img { width: 16px; height: 16px; transition: transform .15s; }
 .habits-page .sort-trigger img.rotate { transform: rotate(180deg); }
 .habits-page .sort-options {
-  position: absolute;
-  z-index: 30;
-  top: calc(100% + 4px);
-  right: 0;
-  width: 100%;
-  padding: 4px;
-  border: 1px solid var(--habits-border);
-  border-radius: 12px;
-  background: var(--input-surface);
-  box-shadow: 0 8px 28px var(--habits-menu-shadow);
+  position: absolute; z-index: 30; top: calc(100% + 4px); right: 0; width: 100%;
+  padding: 4px; background: var(--input-surface); border: 1px solid var(--habits-border);
+  border-radius: 11px; box-shadow: 0 8px 28px var(--habits-menu-shadow);
 }
-.habits-page .sort-options button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--habits-ink);
-  text-align: right;
-  font-size: 12px;
+.habits-page .sort-options button { width: 100%; display: block; padding: 10px; border: 0; border-radius: 8px; background: transparent; font-size: 13px; text-align: right; }
+.habits-page .sort-options button:hover, .habits-page .sort-options button:focus-visible { background: var(--habits-soft); }
+.habits-page .sort-options button[aria-selected="true"] { color: var(--habits-primary); font-weight: 800; }
+
+/* Fixed column proportions prevent long titles from displacing the statistics. */
+.habits-page .habit-list { display: flex; flex-direction: column; gap: 12px; }
+.habits-page .habit-card {
+  display: grid; position: relative; align-items: center; min-width: 0;
+  grid-template-columns: minmax(0, 1.7fr) minmax(146px, .65fr) minmax(130px, 1fr) 94px 44px;
+  gap: 14px clamp(10px, 1.5vw, 22px); min-height: 104px; padding: 13px 18px;
+  border: 1px solid var(--habits-border); border-radius: 16px; background: var(--input-surface);
+  box-shadow: 0 3px 10px color-mix(in srgb, var(--brand-dark) 4%, transparent);
+  transition: border-color .15s, background-color .15s;
 }
-.habits-page .sort-options button:hover,
-.habits-page .sort-options button:focus-visible {
-  background: var(--habits-soft);
+.habits-page .habit-card:hover { border-color: var(--habits-search-border); }
+.habits-page .habit-card.is-busy { opacity: .7; }
+.habits-page .habit-card.is-checked { background: color-mix(in srgb, var(--sage) 2%, var(--input-surface)); }
+.habits-page .habit-identity { display: flex; align-items: center; min-width: 0; gap: 12px; }
+.habits-page .habit-identity-copy { display: flex; flex-direction: column; min-width: 0; align-items: flex-start; gap: 3px; }
+.habits-page .habit-identity h3 { margin: 0; max-width: 100%; overflow-wrap: anywhere; font-size: 15px; line-height: 1.5; font-weight: 800; color: var(--brand-dark); }
+.habits-page .habit-description { color: var(--habits-subtle-text); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.habits-page .habit-plant { width: 68px; height: 68px; flex: 0 0 68px; padding: 5px; border-radius: 14px; background: color-mix(in srgb, var(--habits-soft) 45%, var(--input-surface)); object-fit: contain; }
+.habits-page .habit-scope { align-self: flex-start; padding: 1px 9px; border-radius: 99px; background: var(--habits-soft); color: var(--brand-dark); font-size: 11px; line-height: 1.75; overflow-wrap: anywhere; }
+.habits-page .habit-scope.is-group { background: color-mix(in srgb, var(--sage) 15%, var(--input-surface)); color: color-mix(in srgb, var(--sage) 48%, var(--habits-ink)); }
+.habits-page .habit-upcoming { display: inline-flex; align-items: center; gap: 4px; align-self: flex-start; margin-top: 3px; font-size: 11px; color: var(--habits-primary); font-weight: 600; line-height: 1.55; }
+.habits-page .habit-upcoming svg { flex-shrink: 0; }
+
+/* Small pill, empty circle for pending and filled green circle for success. */
+.habits-page .habit-check-area { display: flex; justify-content: center; align-items: center; min-width: 0; padding-inline-start: 12px; border-inline-start: 1px solid var(--habits-border); }
+.habits-page .habit-check {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  width: max-content; min-height: 44px; padding: 6px 12px; border-radius: 999px;
+  border: 1px solid var(--brand); background: var(--input-surface); color: var(--brand-dark);
+  font-weight: 700; font-size: 12px; white-space: nowrap;
+  transition: background-color .17s, border-color .17s, transform .17s;
 }
-.habits-page .sort-options button[aria-selected="true"] {
-  color: var(--habits-primary);
-  font-weight: 700;
+.habits-page .habit-check-circle { display: grid; place-items: center; width: 20px; height: 20px; flex: 0 0 20px; border: 1.8px solid var(--brand); border-radius: 50%; color: var(--on-primary); background: transparent; }
+.habits-page .habit-check:hover:not(:disabled) { background: var(--habits-soft); border-color: var(--brand-dark); }
+.habits-page .habit-check.checked { border-color: var(--sage-border); color: color-mix(in srgb, var(--sage) 40%, var(--habits-ink)); background: color-mix(in srgb, var(--sage) 10%, var(--input-surface)); }
+.habits-page .habit-check.checked .habit-check-circle { background: color-mix(in srgb, var(--sage) 78%, var(--habits-ink)); border-color: color-mix(in srgb, var(--sage) 78%, var(--habits-ink)); }
+.habits-page .habit-check.checked:hover:not(:disabled) { background: color-mix(in srgb, var(--sage) 18%, var(--input-surface)); border-color: var(--sage); }
+.habits-page .habit-check:active:not(:disabled) { transform: scale(.98); }
+.habits-page .habit-check-unavailable { color: var(--habits-subtle-text); font-size: 12px; line-height: 1.6; text-align: center; }
+
+/* Progress is a secondary, compact statistic. */
+.habits-page .habit-progress { display: flex; flex-direction: column; min-width: 0; gap: 5px; }
+.habits-page .habit-progress-label { text-align: left; }
+.habits-page .habit-progress-label strong { color: var(--habits-primary); font-size: 14px; font-weight: 800; }
+.habits-page .habit-progress-track { height: 7px; background: var(--habits-soft); border-radius: 99px; overflow: hidden; }
+.habits-page .habit-progress-track > span { display: block; height: 100%; background: var(--habits-primary); border-radius: inherit; transition: width .2s; }
+.habits-page .habit-progress-details { color: var(--habits-subtle-text); font-size: 11px; text-align: left; }
+.habits-page .habit-streak { display: inline-flex; align-items: center; justify-content: center; justify-self: center; gap: 5px; white-space: nowrap; padding: 6px 10px; border-radius: 99px; background: color-mix(in srgb, var(--sage) 12%, var(--input-surface)); color: color-mix(in srgb, var(--sage) 42%, var(--habits-ink)); font-weight: 600; font-size: 12px; }
+.habits-page .habit-streak svg { color: var(--brand); flex-shrink: 0; }
+.habits-page .habit-actions { position: relative; justify-self: end; }
+.habits-page .habit-menu-trigger { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 10px; background: transparent; color: var(--habits-subtle-text); }
+.habits-page .habit-menu-trigger:hover:not(:disabled) { background: var(--habits-soft); color: var(--habits-primary); }
+.habits-page .habit-menu-trigger img { display: block; width: 21px; height: 21px; }
+.habits-page .habit-menu-panel {
+  display: flex; flex-direction: column; position: absolute; z-index: 20;
+  top: calc(100% + 4px); left: 0; min-width: 158px; gap: 2px;
+  padding: 5px; border: 1px solid var(--habits-border); border-radius: 12px;
+  background: var(--input-surface); box-shadow: 0 9px 30px var(--habits-menu-shadow);
 }
-.habits-page .search-control { min-width: 0; flex: 1; }
-.habits-page .search-control > div { width: 100%; gap: 8px; }
-.habits-page .search-control label {
-  color: var(--brand-dark);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: normal;
-  text-align: right;
+.habits-page .habit-menu-panel button {
+  display: flex; align-items: center; gap: 9px; width: 100%; min-height: 37px;
+  border: 0; border-radius: 8px; padding: 6px 10px; background: transparent;
+  font-size: 12px; color: var(--habits-ink); white-space: nowrap;
 }
-.habits-page .search-control > div > div {
-  height: 48px;
-  padding: 0 16px;
-  border: 1px solid var(--habits-search-border);
-  border-radius: 16px;
-  background: var(--background);
+.habits-page .habit-menu-panel button:hover { background: var(--habits-soft); }
+.habits-page .habit-menu-panel button:last-child { color: var(--habits-danger); }
+.habits-page .habit-menu-panel img { width: 17px; height: 17px; }
+
+/* A compact, non-modal celebration centered on the viewport. */
+.habits-page .habit-celebration-layer {
+  position: fixed; inset: 0; z-index: 40; display: grid; place-items: center;
+  padding: 20px; pointer-events: none;
 }
-.habits-page .search-control input {
-  width: 100%;
-  min-width: 0;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  color: var(--habits-primary);
-  background: transparent;
-  font-size: 14px;
-  text-align: right;
+.habits-page .habit-celebration-toast {
+  display: flex; align-items: center; gap: 12px; width: max-content;
+  max-width: min(340px, 100%); padding: 14px 18px; border: 1px solid var(--sage-border);
+  border-radius: 18px; background: var(--input-surface); color: var(--habits-ink);
+  box-shadow: 0 10px 36px var(--habits-menu-shadow); pointer-events: none;
 }
-.habits-page .search-control input::placeholder { color: var(--habits-primary); opacity: 1; }
-.habits-page .search-control > div > div:focus-within {
-  outline: 2px solid var(--brand);
-  outline-offset: 2px;
+.habits-page .habit-celebration-icon {
+  display: grid; place-items: center; width: 38px; height: 38px; flex: 0 0 38px;
+  border-radius: 50%; background: color-mix(in srgb, var(--sage) 16%, var(--input-surface));
+  color: color-mix(in srgb, var(--sage) 62%, var(--habits-ink));
 }
-.habits-page .tabs { display: flex;
-  gap: 8px;
-  direction: ltr; }
-.habits-page .tabs button { min-width: 0;
-  min-height: 48px;
-  flex: 1;
-  padding: 10px;
-  border: 1px solid var(--habits-border);
-  border-radius: 12px;
-  color: var(--habits-subtle-text);
-  background: var(--input-surface);
-  font-size: 14px;
-  line-height: 1.9;
-  text-align: center; }
-.habits-page .tabs button.selected { border-color: var(--habits-primary);
-  color: var(--habits-primary);
-  background: var(--habits-soft);
-  font-family: var(--font-primary);
-  font-weight: 700; }
-.habits-page .habit-list { display: flex;
-  flex-direction: column;
-  gap: 12px; }
-.habits-page .habit-card { display: grid;
-  grid-template-columns: 142px 60px 74px 172px minmax(100px, 1fr) 204px;
-  gap: 24px;
-  min-width: 0;
-  height: 110px;
-  align-items: center;
-  padding: 14px;
-  overflow: visible;
-  border: 1px solid var(--habits-border);
-  border-radius: 20px;
-  background: var(--input-surface);
-  box-shadow: 0 4px 18px color-mix(in srgb, var(--brand-dark) 3%, transparent); }
-.habits-page .desktop-menu { position: relative; align-self: center; }
-.habits-page .habit-card.menu-open { z-index: 10; }
-.habits-page .desktop-menu > .menu-panel {
-  position: absolute;
-  z-index: 12;
-  top: calc(100% + 8px);
-  left: 0;
-  box-shadow: 0 8px 28px var(--habits-menu-shadow);
+.habits-page .habit-celebration-copy { display: grid; gap: 3px; min-width: 0; }
+.habits-page .habit-celebration-copy strong { font-size: 15px; line-height: 1.6; color: var(--brand-dark); }
+.habits-page .habit-celebration-copy span { font-size: 12px; line-height: 1.7; color: var(--habits-subtle-text); overflow-wrap: anywhere; }
+.habits-page .habit-card.is-moving { z-index: 2; }
+.habits-page .habit-card:has(.habit-menu-panel) { z-index: 12; }
+.habits-page .page-notice, .habits-page .page-state {
+  padding: 16px; border: 1px solid var(--habits-border); border-radius: 13px; text-align: center;
 }
-.habits-page .desktop-menu .ellipsis { width: 22px;
-  height: 22px; }
-.habits-page .menu-panel {
-  display: flex;
-  width: max-content;
-  flex-direction: row;
-  gap: 4px;
-  padding: 6px;
-  border: 1px solid var(--habits-border);
-  border-radius: 12px;
-  background: var(--input-surface);
+.habits-page .page-notice { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.habits-page .page-notice p { margin: 0; }
+.habits-page .page-notice button { width: auto; min-width: 88px; }
+.habits-page .page-state { color: var(--habits-muted); }
+.habits-page .list-footer { display: flex; align-items: center; justify-content: center; gap: 12px; padding-top: 6px; color: var(--habits-muted); font-size: 12px; }
+.habits-page .list-footer button { width: auto; min-width: 84px; min-height: 40px; border-radius: 10px; }
+
+/* Existing accessible dialogs and shared Button/Input remain unchanged. */
+.habits-page .habit-edit-dialog, .habits-page .habit-delete-dialog {
+  width: min(460px, calc(100vw - 28px)); max-height: min(90vh, 680px); overflow-y: auto;
+  margin: auto; padding: 24px; border: 1px solid var(--habits-border); border-radius: 16px;
+  color: var(--habits-ink); background: var(--input-surface); box-shadow: 0 14px 46px var(--habits-menu-shadow);
 }
-.habits-page .menu-panel button {
-  display: inline-flex;
-  width: 36px;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 8px;
-  color: var(--habits-ink);
-  background: transparent;
+.habits-page .habit-edit-dialog::backdrop, .habits-page .habit-delete-dialog::backdrop { background: color-mix(in srgb, var(--habits-ink) 55%, transparent); }
+.habits-page .habit-edit-dialog h2, .habits-page .habit-delete-dialog h2 { margin: 0; font-size: 20px; font-weight: 800; color: var(--brand-dark); }
+.habits-page .habit-edit-dialog > p, .habits-page .habit-delete-dialog > p { margin: 10px 0 20px; font-size: 13px; color: var(--habits-muted); line-height: 1.9; }
+.habits-page .habit-edit-dialog form { display: flex; flex-direction: column; gap: 18px; }
+.habits-page .habit-edit-dialog .edit-actions, .habits-page .habit-delete-dialog .delete-actions { display: flex; gap: 10px; margin-top: 14px; }
+.habits-page .edit-actions button, .habits-page .delete-actions button { width: auto; min-width: 0; flex: 1; }
+.habits-page .edit-cancel, .habits-page .delete-cancel {
+  border: 1px solid var(--habits-border); box-shadow: none;
+  color: var(--brand-dark); background: var(--input-surface);
 }
-.habits-page .menu-panel button:hover { background: var(--habits-soft); }
-.habits-page .menu-panel button:focus-visible,
-.habits-page .ellipsis:focus-visible {
-  outline: 2px solid var(--brand);
-  outline-offset: 2px;
+.habits-page .habit-edit-dialog .edit-error, .habits-page .habit-delete-dialog .delete-error { color: var(--feedback-error); font-size: 13px; }
+.habits-page .habitree-auth-input:focus-visible { outline: none; }
+
+@media (max-width: 1080px) {
+  .habits-page .tablet-nav { display: flex; justify-content: flex-start; gap: 22px; padding: 12px 24px; }
+  .habits-page .tablet-nav a, .habits-page .tablet-nav span { color: var(--habits-subtle-text); font-size: 13px; text-decoration: none; font-weight: 700; }
+  .habits-page .tablet-nav a.active { color: var(--habits-primary); }
+  .habits-page .page-content { padding: 20px 24px 34px; }
+  .habits-page .habit-card { grid-template-columns: minmax(0, 1.5fr) 142px minmax(112px, .9fr) 82px 44px; gap: 12px; padding: 12px; }
+  .habits-page .habit-plant { width: 54px; height: 54px; flex-basis: 54px; }
+  .habits-page .habit-check-area { padding-inline-start: 8px; }
 }
-.habits-page .menu-panel button img { width: 18px; height: 18px; }
-.habits-page .menu-panel button.delete { color: var(--habits-danger); }
-.habits-page .plant { display: block;
-  width: 60px;
-  height: 60px; }
-.habits-page .plant img { display: block;
-  width: 60px;
-  height: 60px;
-  object-fit: contain; }
-.habits-page .desktop-streak { display: flex;
-  width: 74px;
-  flex-direction: column;
-  gap: 2px;
-  color: var(--habits-primary);
-  text-align: right; }
-.habits-page .desktop-streak img { width: 18px;
-  height: 18px; }
-.habits-page .desktop-streak strong { font-family: var(--font-primary);
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.9; }
-.habits-page .weekly { display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 6px;
-  text-align: right; }
-.habits-page .weekly > span,
-.habits-page .progress > span { color: var(--habits-muted);
-  font-size: 12px;
-  line-height: 1.9; }
-.habits-page .week { display: flex;
-  justify-content: flex-end;
-  gap: 7px; }
-.habits-page .day { display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px; }
-.habits-page .day > span { color: var(--habits-muted);
-  font-size: 12px;
-  line-height: 1.9; }
-.habits-page .day i { display: flex;
-  width: 16px;
-  height: 16px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--habits-soft); }
-.habits-page .day i.checked { background: var(--habits-primary); }
-.habits-page .day i img { width: 11px;
-  height: 11px; }
-.habits-page .progress { display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 8px;
-  text-align: right; }
-.habits-page .progress > span { color: var(--habits-subtle-text); }
-.habits-page .progress-track { position: relative;
-  width: 100%;
-  height: 7px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: var(--habits-soft); }
-.habits-page .progress-track i { position: absolute;
-  top: 0;
-  right: 0;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--habits-primary); }
-.habits-page .progress small { display: none; }
-.habits-page .desktop-identity { display: flex;
-  width: 204px;
-  align-items: center;
-  gap: 12px;
-  text-align: right; }
-.habits-page .desktop-identity > div { display: flex;
-  min-width: 0;
-  flex: 1;
-  flex-direction: column;
-  gap: 3px; }
-.habits-page .desktop-identity strong,
-.habits-page .habit-name strong { font-family: var(--font-primary);
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.9; }
-.habits-page .desktop-identity span,
-.habits-page .habit-name span { color: var(--habits-muted);
-  font-size: 12px;
-  line-height: 1.9; }
-.habits-page .desktop-identity img { width: 26px;
-  height: 26px; }
-.habits-page .list-footer { display: flex;
-  align-items: center;
-  gap: 12px; }
-.habits-page .list-footer button { height: 48px;
-  min-height: 48px;
-  padding: 8px 24px;
-  border: 1px solid var(--habits-pagination-border);
-  border-radius: 12px;
-  color: var(--brand-dark);
-  background: var(--background);
-  font-family: var(--font-primary);
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.9; }
-.habits-page .list-footer span { min-width: 0;
-  flex: 1;
-  color: var(--habits-muted);
-  font-size: 12px;
-  line-height: 1.9;
-  text-align: right; }
-.habits-page .brand-mark { width: 42px;
-  height: 42px;
-  flex: 0 0 42px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  background: var(--brand); }
-.habits-page .brand-mark img { width: 26px;
-  height: 26px; }
-@media (max-width: 1199px) and (min-width: 1024px) {
-.habits-page .habit-card { gap: 14px;
-    grid-template-columns: 120px 60px 64px 162px minmax(80px, 1fr) 184px; }
-}
-@media (max-width: 1023px) {
-.habits-page .desktop-title,
-.habits-page .desktop-menu,
-.habits-page .desktop-streak,
-.habits-page .desktop-identity { display: none; }
-.habits-page .brand-title,
-.habits-page .brand-mark,
-.habits-page .tablet-nav,
-.habits-page .responsive-heading,
-.habits-page .responsive-streak { display: flex; }
-.habits-page .brand-title { color: var(--brand); }
-.habits-page .tablet-nav { justify-content: space-between;
-    padding: 12px 28px; }
-.habits-page .tablet-nav a, .habits-page .tablet-nav span { color: var(--habits-muted);
-    text-decoration: none;
-    font-family: var(--font-primary);
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1.9; }
-.habits-page .tablet-nav a.active, .habits-page .tablet-nav span.active { color: var(--habits-primary); }
-.habits-page .page-content { gap: 20px;
-    padding: 28px; }
-.habits-page .habit-list { gap: 20px; }
-.habits-page .habit-card { display: grid;
-    height: 253px;
-    grid-template-columns: 96px 1fr;
-    grid-template-rows: 55px 82px 72px;
-    gap: 12px 16px;
-    align-items: center;
-    padding: 16px; }
-.habits-page .responsive-heading { grid-column: 1 / -1;
-    gap: 12px;
-    align-items: center; }
-.habits-page .responsive-heading .ellipsis { width: 22px;
-    height: 22px;
-    flex: 0 0 22px; }
-.habits-page .habit-name { display: flex;
-    min-width: 0;
-    flex: 1;
-    flex-direction: column;
-    gap: 3px;
-    text-align: right; }
-.habits-page .habit-symbol { display: flex;
-    width: 42px;
-    height: 42px;
-    flex: 0 0 42px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 14px;
-    background: var(--habits-soft); }
-.habits-page .habit-symbol.water { background: var(--habits-water-surface); }
-.habits-page .habit-symbol img { width: 22px;
-    height: 22px; }
-.habits-page .plant { width: 70px;
-    height: 70px;
-    grid-column: 1;
-    grid-row: 2; }
-.habits-page .plant img { width: 70px;
-    height: 70px;
-    object-fit: contain; }
-.habits-page .progress { grid-column: 2;
-    grid-row: 2; }
-.habits-page .progress small { display: block;
-    color: var(--habits-primary);
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 1.9; }
-.habits-page .responsive-streak { grid-column: 1;
-    grid-row: 3;
-    flex-direction: column;
-    align-items: flex-start;
-    color: var(--habits-primary);
-    text-align: right; }
-.habits-page .responsive-streak strong { width: 100%;
-    font-family: var(--font-primary);
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1.9; }
-.habits-page .responsive-streak span { width: 100%;
-    color: var(--habits-muted);
-    font-size: 12px;
-    line-height: 1.9; }
-.habits-page .weekly { grid-column: 2;
-    grid-row: 3; }
+@media (max-width: 850px) {
+  .habits-page .habit-navigation { flex-wrap: wrap; gap: 10px; }
+  .habits-page .tabs { flex-basis: 100%; max-width: none; }
+  .habits-page .habit-sort-row { margin-inline-start: auto; }
+  .habits-page .tabs button { gap: 5px; padding-inline: 6px; font-size: 13px; }
+  .habits-page .habit-sort-row { flex-basis: 150px; }
+  .habits-page .habit-card { grid-template-columns: minmax(0, 1fr) minmax(115px, .8fr) 90px 44px; gap: 10px 14px; min-height: 0; }
+  .habits-page .habit-identity { grid-column: 1 / 3; grid-row: 1; }
+  .habits-page .habit-check-area { grid-column: 1; grid-row: 2; justify-content: start; border-inline-start: 0; padding: 0; }
+  .habits-page .habit-progress { grid-column: 2 / 5; grid-row: 2; }
+  .habits-page .habit-streak { grid-column: 3; grid-row: 1; }
+  .habits-page .habit-actions { grid-column: 4; grid-row: 1; }
 }
 @media (max-width: 639px) {
-.habits-page .topbar { padding: 0 20px; }
-.habits-page .topbar-title { font-family: var(--font-primary);
-    font-size: 18px;
-    font-weight: 700; }
-.habits-page .tablet-nav { display: none; }
-.habits-page .page-content { gap: 20px;
-    padding: 20px; }
-.habits-page .intro { flex-direction: column-reverse;
-    align-items: flex-start;
-    gap: 20px; }
-.habits-page .intro-copy { width: 100%; }
-.habits-page .desktop-button-label { display: none; }
-.habits-page .mobile-button-label { display: inline; }
-.habits-page .filters { gap: 16px; }
-.habits-page .sort-control { width: 118px;
-    flex-basis: 118px; }
-.habits-page .tabs button { padding: 10px 4px;
-    white-space: nowrap; }
-.habits-page .list-footer { gap: 12px; }
-.habits-page .list-footer button { padding: 8px 20px; }
-.habits-page .bottom-nav { display: flex;
-    gap: 8px;
-    padding: 12px 12px 22px;
-    border-top: 1px solid var(--habits-border);
-    background: var(--input-surface); }
-.habits-page .bottom-nav a, .habits-page .bottom-nav > span { display: flex;
-    min-width: 0;
-    flex: 1;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    color: var(--habits-muted);
-    text-decoration: none;
-    font-size: 12px;
-    line-height: 1.9; }
-.habits-page .bottom-nav a.active, .habits-page .bottom-nav > span.active {
-    color: var(--habits-primary);
+  .habits-page .topbar { height: 64px; padding-inline: 16px; }
+  .habits-page .tablet-nav { display: none; }
+  .habits-page .page-content { padding: 16px 16px 28px; gap: 15px; }
+  .habits-page .welcome-panel { min-height: 82px; padding: 12px 15px; border-radius: 15px; gap: 9px; }
+  .habits-page .welcome-headline { font-size: 17px; }
+  .habits-page .welcome-headline svg { width: 18px; height: 18px; }
+  .habits-page .welcome-panel p:not(.welcome-headline) { font-size: 11px; }
+  .habits-page .welcome-panel time { font-size: 10px; max-width: 94px; text-align: left; padding-inline-end: 0; }
+  .habits-page .welcome-botanical { width: 80px; height: 70px; opacity: .18; }
+  .habits-page .intro { gap: 10px; }
+  .habits-page .intro h1 { font-size: 24px; }
+  .habits-page .intro p { font-size: 11px; }
+  .habits-page .new-habit { min-width: 108px; min-height: 44px; height: 44px; padding-inline: 9px; font-size: 12px; }
+  .habits-page .new-habit svg { width: 16px; height: 16px; }
+  .habits-page .habit-navigation { flex-direction: column; align-items: stretch; }
+  .habits-page .tabs { flex: 0 0 auto; width: 100%; max-width: none; }
+  .habits-page .tabs button { font-size: 12px; min-height: 44px; padding: 5px; gap: 4px; }
+  .habits-page .tabs button svg { width: 15px; height: 15px; }
+  .habits-page .tab-count { font-size: 10px; }
+  .habits-page .habit-sort-row { flex: 0 0 auto; width: 150px; align-self: flex-end; }
+  /* Keep the main action and overflow menu together; reserve a separate
+     quiet row for the two progress indicators. Columns follow RTL order. */
+  .habits-page .habit-card {
+    grid-template-columns: minmax(0, 1fr) 46px 52px 44px;
+    gap: 10px 6px; padding: 12px; border-radius: 14px;
+  }
+  .habits-page .habit-identity { grid-column: 1; grid-row: 1; align-items: flex-start; gap: 7px; }
+  .habits-page .habit-identity h3 { font-size: 14px; }
+  .habits-page .habit-description { font-size: 11px; }
+  .habits-page .habit-scope { font-size: 10px; }
+  .habits-page .habit-plant { width: 42px; height: 46px; flex-basis: 42px; }
+  .habits-page .habit-check-area { grid-column: 2 / 4; grid-row: 1; justify-content: flex-end; align-self: start; }
+  .habits-page .habit-check { max-width: 100%; padding-inline: 8px; gap: 5px; font-size: 11px; }
+  .habits-page .habit-check-circle { width: 18px; height: 18px; flex-basis: 18px; }
+  .habits-page .habit-check-unavailable { max-width: 100%; overflow-wrap: anywhere; }
+  .habits-page .habit-actions { grid-column: 4; grid-row: 1; align-self: start; }
+  .habits-page .habit-progress {
+    grid-column: 1 / 3; grid-row: 2; display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 30px auto; align-items: center; gap: 4px 8px;
+  }
+  .habits-page .habit-progress-label { grid-column: 2; grid-row: 1; }
+  .habits-page .habit-progress-track { grid-column: 1; grid-row: 1; }
+  .habits-page .habit-progress-details { grid-column: 1 / 3; grid-row: 2; text-align: right; }
+  .habits-page .habit-streak { grid-column: 3 / 5; grid-row: 2; justify-self: end; align-self: start;
+    min-height: 30px; line-height: 18px; padding: 6px 9px; }
+  .habits-page .habit-streak svg { width: 17px; height: 17px; }
+  .habits-page .bottom-nav { display: flex; justify-content: space-around; gap: 8px; margin-top: 12px; padding: 12px 12px 20px; border-top: 1px solid var(--habits-border); background: var(--input-surface); }
+  .habits-page .bottom-nav a, .habits-page .bottom-nav > span { display: flex; flex: 1; min-width: 0; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: var(--habits-subtle-text); font-size: 11px; }
+  .habits-page .bottom-nav a.active { color: var(--habits-primary); }
+  .habits-page .bottom-nav img { width: 22px; height: 22px; }
+  .habits-page .page-notice, .habits-page .list-footer { flex-wrap: wrap; }
 }
-.habits-page .bottom-nav img { width: 22px;
-    height: 22px; }
+/* Very narrow phones: give the title its full usable width, and keep
+   completion within easy reach just below the top-left menu. */
+@media (max-width: 379px) {
+  .habits-page .habit-identity { grid-column: 1 / 4; }
+  .habits-page .habit-check-area { grid-column: 3 / 5; grid-row: 2; }
+  .habits-page .habit-streak { grid-column: 3 / 5; grid-row: 3; }
+  .habits-page .habit-progress { grid-column: 1 / 3; grid-row: 3; }
 }
-@media (max-width: 389px) {
-.habits-page .page-content { padding-right: 14px;
-    padding-left: 14px; }
-.habits-page .topbar { gap: 12px;
-    padding-right: 14px;
-    padding-left: 14px; }
-.habits-page .filters { gap: 10px; }
-.habits-page .sort-control { width: 108px;
-    flex-basis: 108px; }
-.habits-page .habit-card { grid-template-columns: 88px minmax(0, 1fr);
-    column-gap: 10px; }
-.habits-page .week { gap: 5px; }
+@media (max-width: 359px) {
+  .habits-page .page-content { padding-inline: 10px; }
+  .habits-page .welcome-panel time { display: none; }
+  .habits-page .tabs button { font-size: 11px; gap: 3px; }
+  .habits-page .tabs button svg { display: none; }
+  .habits-page .habit-check { padding-inline: 8px; }
+  .habits-page .habit-plant { width: 34px; height: 40px; flex-basis: 34px; padding: 3px; }
+  .habits-page .habit-identity { gap: 5px; }
 }
-
-.habits-page .habit-card { position:relative; }
-.habits-page .responsive-heading { position:relative; }
-.habits-page .responsive-menu-panel { position:absolute; top:42px; left:0; z-index:5; }
-.habits-page .page-notice, .habits-page .page-state { padding:16px; border:1px solid var(--habits-border); border-radius:12px; text-align:center; }
-.habits-page .page-notice { display:flex; justify-content:space-between; align-items:center; gap:16px; color:var(--brand-dark); }
-.habits-page .page-notice p { margin:0; }
-.habits-page .page-notice button { color:var(--brand-dark); text-decoration:underline; }
-.habits-page .habit-card.is-busy { opacity:.6; pointer-events:none; }
-.habits-page .bottom-nav { direction:ltr; }
-
-.habits-page .tablet-nav > span { color:var(--habits-muted); font-size:14px; line-height:1.9; font-weight:700; }
-.habits-page .tablet-nav > span.active { color:var(--habits-primary); }
-@media (min-width:1024px){.habits-page .responsive-menu-panel{display:none;}}
-@media (max-width:1023px){.habits-page .responsive-menu-panel .menu-panel{box-shadow:0 8px 28px var(--habits-menu-shadow);}}
-
-/* Unavailable destinations are intentionally non-interactive; links are real routes. */
-.habits-page .tablet-nav [aria-disabled="true"],
-.habits-page .bottom-nav [aria-disabled="true"] { cursor: default; }
-.habits-page .tablet-nav a:focus-visible,
-.habits-page .bottom-nav a:focus-visible {
-  outline: 2px solid var(--brand);
-  outline-offset: 3px;
-  border-radius: 6px;
+@media (prefers-reduced-motion: reduce) {
+  .habits-page .habit-card, .habits-page .sort-trigger img, .habits-page .habit-check,
+  .habits-page .habit-progress-track > span, .habits-page .tabs button { transition: none; }
+  .habits-page .habit-check:active:not(:disabled) { transform: none; }
 }
 
-/* Accessible, native modal for demo-only edit; does not change the Figma page layout. */
-.habits-page .habit-edit-dialog {
-  width: min(430px, calc(100vw - 32px));
-  max-height: min(90vh, 640px);
-  overflow-y: auto;
-  margin: auto;
-  padding: 24px;
-  border: 1px solid var(--habits-border);
-  border-radius: 16px;
-  color: var(--habits-ink);
-  background: var(--input-surface);
-  box-shadow: 0 14px 46px var(--habits-menu-shadow);
-}
-.habits-page .habit-edit-dialog::backdrop { background: color-mix(in srgb, var(--habits-ink) 55%, transparent); }
-.habits-page .habit-edit-dialog h2 { margin: 0; color: var(--brand-dark); font-size: 20px; font-weight: 700; }
-.habits-page .habit-edit-dialog > p { margin: 8px 0 20px; color: var(--habits-muted); font-size: 13px; }
-.habits-page .habit-edit-dialog form { display: flex; flex-direction: column; gap: 18px; }
-.habits-page .habit-edit-dialog .edit-error { color: var(--feedback-error); font-size: 13px; }
-.habits-page .habit-edit-dialog .edit-actions { display: flex; gap: 10px; }
-.habits-page .habit-edit-dialog .edit-actions button { flex: 1; width: auto; min-width: 0; }
-.habits-page .habit-edit-dialog .edit-actions > button:first-child {
-  border: 1px solid var(--habits-border); border-radius: 12px;
-  background: var(--input-surface); color: var(--brand-dark);
-}
-.habits-page .habit-edit-dialog .edit-actions > button:first-child:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-
-/* Keep the three-dot action trigger visible at all three Figma breakpoints. */
-.habits-page .ellipsis img { display: block; width: 22px; height: 22px; flex: 0 0 22px; }
-
-/* Shared Input owns the outer focus state. Do not draw a second rectangular
-   browser outline around the inner input, especially in the edit dialog. */
-.habits-page .habitree-auth-input:focus-visible { outline: none; }
-.habits-page .habit-edit-dialog .edit-cancel {
-  border: 1px solid var(--habits-border);
-  border-radius: 12px;
-  box-shadow: none;
-  background: var(--input-surface);
-  color: var(--brand-dark);
-}
-.habits-page .habit-edit-dialog .edit-cancel:hover:not(:disabled) {
-  background: var(--habits-soft);
-  box-shadow: none;
-}
-
-/* Mock deletion confirmation: reuse shared Button and the existing dialog design tokens. */
-.habits-page .habit-delete-dialog {
-  width: min(430px, calc(100vw - 32px));
-  max-height: min(90vh, 640px);
-  overflow-y: auto;
-  margin: auto;
-  padding: 24px;
-  border: 1px solid var(--habits-border);
-  border-radius: 16px;
-  color: var(--habits-ink);
-  background: var(--input-surface);
-  box-shadow: 0 14px 46px var(--habits-menu-shadow);
-}
-.habits-page .habit-delete-dialog::backdrop { background: color-mix(in srgb, var(--habits-ink) 55%, transparent); }
-.habits-page .habit-delete-dialog h2 { margin: 0; color: var(--brand-dark); font-size: 20px; font-weight: 700; }
-.habits-page .habit-delete-dialog p { margin: 12px 0 24px; color: var(--habits-muted); font-size: 15px; line-height: 1.9; }
-.habits-page .habit-delete-dialog .delete-actions { display: flex; gap: 10px; }
-.habits-page .habit-delete-dialog .delete-actions button { flex: 1; width: auto; min-width: 0; }
-.habits-page .habit-delete-dialog .delete-cancel {
-  border: 1px solid var(--habits-border);
-  background: var(--input-surface);
-  color: var(--brand-dark);
-  box-shadow: none;
-}
-.habits-page .habit-delete-dialog .delete-cancel:hover:not(:disabled) {
-  background: var(--habits-soft);
-  box-shadow: none;
-}
-
-.habits-page .habit-delete-dialog .delete-error { color: var(--feedback-error); margin-top: -12px; font-size: 13px; }
+.habits-page .habit-menu-message { margin: 0; padding: 8px; font-size: 12px; line-height: 1.7; color: var(--habits-ink); }

@@ -1,22 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Habit, UpdateHabitInput } from '../types';
+import type { Habit, RecordHabitInput, UpdateHabitInput } from '../types';
 import type { HabitsRepository } from '../services/habitsRepository';
 
+/** Presentation state only. Business calculations belong to the repository / Django. */
 export function useHabits(repository: HabitsRepository) {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [recordingId, setRecordingId] = useState<string | null>(null);
   const requestId = useRef(0);
 
   const fetchHabits = useCallback(async (id: number, signal?: AbortSignal) => {
     try {
       const result = await repository.getHabits(signal);
-      if (id === requestId.current) {
-        setHabits(result);
-        setError(null);
-      }
+      if (id === requestId.current) { setHabits(result); setError(null); }
     } catch {
       if (id === requestId.current) setError('دریافت عادت‌ها با خطا مواجه شد.');
     } finally {
@@ -38,15 +37,30 @@ export function useHabits(repository: HabitsRepository) {
     await fetchHabits(id);
   }, [fetchHabits]);
 
+  const record = useCallback(async (habitId: string, input: RecordHabitInput): Promise<boolean> => {
+    setRecordingId(habitId);
+    setError(null);
+    try {
+      const updated = await repository.recordHabit(habitId, input);
+      setHabits((items) => items.map((item) => item.id === habitId ? updated : item));
+      return true;
+    } catch {
+      setError('ثبت عملکرد انجام نشد. دوباره تلاش کن.');
+      return false;
+    } finally {
+      setRecordingId(null);
+    }
+  }, [repository]);
+
   const remove = useCallback(async (habitId: string): Promise<boolean> => {
     setDeletingId(habitId);
     setError(null);
     try {
       await repository.deleteHabit(habitId);
-      setHabits((previous) => previous.filter((habit) => habit.id !== habitId));
+      setHabits((items) => items.filter((item) => item.id !== habitId));
       return true;
     } catch {
-      setError('حذف عادت انجام نشد. دوباره تلاش کنید.');
+      setError('حذف عادت انجام نشد. دوباره تلاش کن.');
       return false;
     } finally {
       setDeletingId(null);
@@ -58,15 +72,15 @@ export function useHabits(repository: HabitsRepository) {
     setError(null);
     try {
       const updated = await repository.updateHabit(habitId, input);
-      setHabits((previous) => previous.map((habit) => habit.id === habitId ? updated : habit));
+      setHabits((items) => items.map((item) => item.id === habitId ? updated : item));
       return true;
     } catch {
-      setError('ویرایش عادت انجام نشد. دوباره تلاش کنید.');
+      setError('ویرایش عادت انجام نشد. دوباره تلاش کن.');
       return false;
     } finally {
       setUpdatingId(null);
     }
   }, [repository]);
 
-  return { habits, loading, error, deletingId, updatingId, reload, remove, update };
+  return { habits, loading, error, deletingId, updatingId, recordingId, reload, record, remove, update };
 }

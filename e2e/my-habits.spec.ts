@@ -1,209 +1,139 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
-/** Browser-level acceptance tests for the mock-only My Habits feature. */
-test.describe('My Habits — mock user flows', () => {
+const cards = (page: Page) => page.getByTestId('habit-card');
+const card = (page: Page, title: string) => page.getByRole('article', { name: title, exact: true });
+const tab = (page: Page, name: RegExp) => page.getByRole('group', { name: 'نمایش عادت‌ها' }).getByRole('button', { name });
+const checkIn = (page: Page, title: string) => card(page, title).getByRole('button', { name: /ثبت انجام امروز/ });
+const waterTitle = 'نوشیدن آب';
+
+async function openAction(page: Page, title: string, action: 'ویرایش' | 'حذف') {
+  const habit = card(page, title);
+  await habit.getByRole('button', { name: `عملیات ${title}` }).click();
+  await habit.getByRole('button', { name: `${action} ${title}` }).click();
+}
+
+test.describe('My Habits — user flows', () => {
   test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.clock.setFixedTime(new Date(2026, 10, 24, 12));
     await page.goto('/my-habits');
     await expect(page.getByRole('heading', { name: 'عادت‌های من', level: 1 })).toBeVisible();
+    await expect(card(page, waterTitle)).toBeVisible();
   });
 
-  test('opens the route and exposes an accessible list of habits', async ({ page }) => {
-    await expect(page.locator('.habits-page main h1')).toHaveCount(1);
-    await expect(page.getByTestId('habit-card')).toHaveCount(5);
-    await expect(page.getByRole('searchbox', { name: 'جست‌وجوی عادت' })).toBeVisible();
-    await expect(page.getByRole('group', { name: 'فیلتر وضعیت عادت‌ها' })).toBeVisible();
-    // Feature scope: no unrequested sidebar or check-in form; actions start closed.
-    await expect(page.locator('.habits-page .sidebar')).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'ثبت عملکرد' })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'ویرایش عادت' })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'حذف عادت' })).toHaveCount(0);
+  test('shows due habits, upcoming habits and completed periods', async ({ page }) => {
+    await expect(tab(page, /^امروز/)).toHaveAttribute('aria-pressed', 'true');
+    await expect(card(page, 'چالش مطالعهٔ دوستان')).toBeVisible();
+    await expect(card(page, 'ورزش صبحگاهی')).toHaveCount(0);
+    await expect(card(page, 'چالش مراقبه')).toHaveCount(0);
+
+    await tab(page, /^همه/).click();
+    const exercise = card(page, 'ورزش صبحگاهی');
+    await expect(exercise).toContainText('نوبت بعد');
+    await expect(exercise).toContainText('موعد نرسیده');
+    await expect(checkIn(page, 'ورزش صبحگاهی')).toHaveCount(0);
+    await page.getByRole('button', { name: 'بعدی', exact: true }).click();
+    await expect(card(page, 'چالش مراقبه')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'بعدی', exact: true })).toBeDisabled();
+    await page.getByRole('button', { name: 'قبلی', exact: true }).click();
+    await expect(exercise).toBeVisible();
+
+    await tab(page, /^تکمیل‌شده/).click();
+    await expect(card(page, 'چالش مراقبه')).toContainText('دوره تکمیل شد');
+    await expect(card(page, 'مطالعهٔ روزانه')).toHaveCount(0);
+    await expect(cards(page)).toHaveCount(1);
   });
 
-  test('searches, filters by status and shows an empty-result message', async ({ page }) => {
-    const search = page.getByRole('searchbox', { name: 'جست‌وجوی عادت' });
-    const cards = page.getByTestId('habit-card');
-    await search.fill('ورزش');
-    await expect(cards).toHaveCount(1);
-    await expect(cards.first()).toContainText('ورزش صبحگاهی');
-
-    await search.fill('');
-    await page.getByRole('button', { name: /تکمیل‌شده/ }).click();
-    await expect(cards).toHaveCount(1);
-    await expect(cards.first()).toContainText('مطالعه روزانه');
-
-    await page.getByRole('button', { name: /همه/ }).click();
-    await search.fill('نام غیرموجود');
-    await expect(cards).toHaveCount(0);
-    await expect(page.getByRole('status').filter({ hasText: 'عادتی مطابق جست‌وجو' })).toBeVisible();
+  test('records completion, updates progress, reorders and supports undo', async ({ page }) => {
+    const habit = card(page, waterTitle);
+    const button = checkIn(page, waterTitle);
+    const progress = habit.getByRole('progressbar');
+    await expect(button).toHaveAttribute('aria-pressed', 'false');
+    await expect(progress).toHaveAttribute('aria-valuenow', '50');
+    await button.click();
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
+    await expect(progress).toHaveAttribute('aria-valuenow', '53');
+    const pending = ['کمتر استفاده‌کردن از شبکه‌های اجتماعی', 'چالش مطالعهٔ دوستان'];
+    await expect.poll(async () => {
+      const order = await cards(page).evaluateAll(elements => elements.map(element => element.getAttribute('aria-label')));
+      return pending.every(title => order.indexOf(title) >= 0 && order.indexOf(title) < order.indexOf(waterTitle));
+    }).toBe(true);
+    await button.click();
+    await expect(button).toHaveAttribute('aria-pressed', 'false');
+    await expect(progress).toHaveAttribute('aria-valuenow', '50');
+    await expect(cards(page).first()).toHaveAttribute('aria-label', waterTitle);
   });
 
-  test('sorts mock habits and keeps pagination controls safe at the last page', async ({ page }) => {
-    const sort = page.getByRole('button', { name: 'مرتب‌سازی قدیمی‌ترین' });
-    await page.getByRole('button', { name: 'مرتب‌سازی جدیدترین' }).click();
-    await expect(page.getByRole('listbox', { name: 'مرتب‌سازی' })).toBeVisible();
-    await page.getByRole('option', { name: 'قدیمی‌ترین' }).click();
-    await expect(sort).toBeVisible();
-    await expect(page.getByTestId('habit-card').first()).toContainText('خواب منظم');
-    await expect(page.getByRole('button', { name: 'بعدی' })).toBeDisabled();
-    await expect(page.getByRole('button', { name: 'قبلی' })).toBeDisabled();
-  });
-
-  test('dismisses action menus and confirms or cancels mock deletion in an accessible modal', async ({ page }) => {
-    const cards = page.getByTestId('habit-card');
-    const study = cards.filter({ hasText: 'مطالعه روزانه' });
-    const deleteAction = study.getByRole('button', { name: 'حذف عادت' });
-    const openMenu = async () => {
-      await study.getByRole('button', { name: 'عملیات مطالعه روزانه' }).first().click();
-      await expect(deleteAction).toBeVisible();
-      // Icon-only actions retain accessible names without extra visible captions.
-      await expect(deleteAction).toHaveText('');
-    };
-
-    await openMenu();
-    // Clicking anywhere outside the active trigger/popup must dismiss its actions.
-    await page.getByRole('heading', { name: 'عادت‌های من', level: 1 }).click();
-    await expect(deleteAction).toHaveCount(0);
-
-    await openMenu();
-    // Clicking the body of the same card also counts as outside the popup.
-    await study.locator('.desktop-identity strong').click();
-    await expect(deleteAction).toHaveCount(0);
-
-    await openMenu();
-    // Focusing a control outside via keyboard also dismisses the popup.
-    await page.getByRole('searchbox', { name: 'جست‌وجوی عادت' }).focus();
-    await expect(deleteAction).toHaveCount(0);
-
-    await openMenu();
-    await page.keyboard.press('Escape');
-    await expect(deleteAction).toHaveCount(0);
-
-    await openMenu();
-    // Opening a different card's popup must close this card's popup.
-    const other = cards.filter({ hasText: 'ورزش صبحگاهی' });
-    await other.getByRole('button', { name: 'عملیات ورزش صبحگاهی' }).first().click();
-    await expect(deleteAction).toHaveCount(0);
-    await expect(other.getByRole('button', { name: 'حذف عادت' })).toBeVisible();
-    await page.getByRole('heading', { name: 'عادت‌های من', level: 1 }).click();
-
-    await openMenu();
-    let browserDialogOpened = false;
-    page.on('dialog', (dialog) => { browserDialogOpened = true; void dialog.dismiss(); });
-    await deleteAction.click();
-    const confirmation = page.getByRole('dialog', { name: 'حذف عادت' });
-    await expect(confirmation).toBeVisible();
-    await expect(confirmation).toContainText('مطالعه روزانه');
-    await expect(cards).toHaveCount(5);
-    await confirmation.getByRole('button', { name: 'انصراف' }).click();
-    await expect(confirmation).toHaveCount(0);
-    await expect(cards).toHaveCount(5);
-
-    await openMenu();
-    await deleteAction.click();
-    await page.keyboard.press('Escape');
-    await expect(confirmation).toHaveCount(0);
-    await expect(cards).toHaveCount(5);
-
-    await openMenu();
-    await deleteAction.click();
-    await confirmation.getByRole('button', { name: 'بله، حذف شود' }).click();
-    await expect(confirmation).toHaveCount(0);
-    await expect(cards).toHaveCount(4);
-    expect(browserDialogOpened).toBe(false);
-    await expect(cards.filter({ hasText: 'مطالعه روزانه' })).toHaveCount(0);
-  });
-
-  test('sort popup highlights only the hovered option, not both choices', async ({ page }) => {
-    await page.getByRole('button', { name: 'مرتب‌سازی جدیدترین' }).click();
-    const newest = page.getByRole('option', { name: 'جدیدترین' });
-    const oldest = page.getByRole('option', { name: 'قدیمی‌ترین' });
-    await expect(newest).toHaveAttribute('aria-selected', 'true');
-    const unhighlighted = await newest.evaluate((element) => getComputedStyle(element).backgroundColor);
-    await oldest.hover();
-    const highlighted = await oldest.evaluate((element) => getComputedStyle(element).backgroundColor);
-    await expect(newest).toHaveCSS('background-color', unhighlighted);
-    expect(highlighted).not.toBe(unhighlighted);
-    await newest.hover();
-    await expect(oldest).toHaveCSS('background-color', unhighlighted);
-    await expect(newest).toHaveCSS('background-color', highlighted);
-  });
-
-  test('styled sorting popup supports Escape and keyboard navigation', async ({ page }) => {
+  test('sorts habits by creation date while keeping completed check-ins last', async ({ page }) => {
     const trigger = page.getByRole('button', { name: 'مرتب‌سازی جدیدترین' });
     await trigger.focus();
     await page.keyboard.press('ArrowDown');
     await expect(page.getByRole('listbox', { name: 'مرتب‌سازی' })).toBeVisible();
-    await page.keyboard.press('Escape');
-    await expect(page.getByRole('listbox', { name: 'مرتب‌سازی' })).toHaveCount(0);
-    await trigger.click();
-    await page.getByRole('heading', { name: 'عادت‌های من', level: 1 }).click();
-    await expect(page.getByRole('listbox', { name: 'مرتب‌سازی' })).toHaveCount(0);
+    await page.getByRole('option', { name: 'قدیمی‌ترین' }).click();
+    await expect(cards(page).first()).toHaveAttribute('aria-label', 'چالش مطالعهٔ دوستان');
+    await expect(cards(page).last()).toHaveAttribute('aria-label', 'مطالعهٔ روزانه');
   });
 
-  test('opens icon-only edit, validates inputs and updates mock data', async ({ page }) => {
-    const card = page.getByTestId('habit-card').filter({ hasText: 'مطالعه روزانه' });
-    await card.getByRole('button', { name: 'عملیات مطالعه روزانه' }).first().click();
-    const editAction = card.getByRole('button', { name: 'ویرایش عادت' });
-    await expect(editAction).toBeVisible();
-    await expect(editAction).toHaveText('');
-    await editAction.click();
+  test('validates personal habit edits and saves valid changes', async ({ page }) => {
+    await openAction(page, waterTitle, 'ویرایش');
     const dialog = page.getByRole('dialog', { name: 'ویرایش عادت' });
-    await expect(dialog).toBeVisible();
-    const title = dialog.getByRole('textbox', { name: 'نام عادت' });
-    await title.focus();
-    await expect(title).toHaveCSS('outline-style', 'none');
-    await title.fill('تغییر موقت');
-    await dialog.getByRole('button', { name: 'انصراف' }).click();
-    await expect(dialog).toHaveCount(0);
-    await expect(page.getByTestId('habit-card').filter({ hasText: 'مطالعه روزانه' })).toHaveCount(1);
-    await card.getByRole('button', { name: 'عملیات مطالعه روزانه' }).first().click();
-    await card.getByRole('button', { name: 'ویرایش عادت' }).click();
-    await expect(dialog).toBeVisible();
-    await title.fill('x');
+    const name = dialog.getByRole('textbox', { name: 'نام عادت' });
+    await name.fill('x');
     await dialog.getByRole('button', { name: 'ذخیره تغییرات' }).click();
     await expect(dialog.getByRole('alert')).toContainText('حداقل ۲ حرف');
-    await title.fill('مطالعه شبانه');
-    await dialog.getByRole('textbox', { name: 'توضیح کوتاه' }).fill('مطالعه قبل از خواب');
+    await dialog.getByRole('button', { name: 'انصراف' }).click();
+    await expect(card(page, waterTitle)).toBeVisible();
+    await openAction(page, waterTitle, 'ویرایش');
+    await name.fill('آب کافی');
+    await dialog.getByRole('textbox', { name: 'توضیح کوتاه' }).fill('۸ لیوان در روز');
     await dialog.getByRole('button', { name: 'ذخیره تغییرات' }).click();
     await expect(dialog).toHaveCount(0);
-    await expect(page.getByTestId('habit-card').filter({ hasText: 'مطالعه شبانه' })).toContainText('مطالعه قبل از خواب');
+    await expect(card(page, 'آب کافی')).toContainText('۸ لیوان در روز');
+    await expect(card(page, waterTitle)).toHaveCount(0);
   });
 
-  test('renders the three original plant species with loaded images', async ({ page }) => {
-    // Only the three user-supplied plant illustrations are essential visual assets.
-    // Responsive overflow and layout are already checked in the viewport tests below.
-    // Avoid asserting Vite-generated filename hashes or every decorative SVG icon.
-    const representativePlants = [
-      { habit: 'نوشیدن آب', species: 'bluebell' },
-      { habit: 'مطالعه روزانه', species: 'lavender' },
-      { habit: 'ورزش صبحگاهی', species: 'daisy' },
-    ];
-
-    for (const { habit, species } of representativePlants) {
-      const image = page.getByTestId('habit-card')
-        .filter({ hasText: habit })
-        .locator('picture.plant img');
-      await expect(image).toHaveCount(1);
-      await image.scrollIntoViewIfNeeded();
-      await expect.poll(async () => image.evaluate((element) => {
-        const img = element as HTMLImageElement;
-        return img.complete && img.naturalWidth > 0 && img.naturalHeight > 0;
-      }), { message: `Plant image must load for ${habit}` }).toBe(true);
-      await expect(image).toHaveAttribute('src', new RegExp(species, 'i'));
-    }
+  test('deletes a personal habit only after confirmation', async ({ page }) => {
+    await openAction(page, waterTitle, 'حذف');
+    const dialog = page.getByRole('dialog', { name: 'حذف عادت' });
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(card(page, waterTitle)).toBeVisible();
+    await openAction(page, waterTitle, 'حذف');
+    await dialog.getByRole('button', { name: 'بله، حذف شود' }).click();
+    await expect(card(page, waterTitle)).toHaveCount(0);
+    await tab(page, /^همه/).click();
+    await expect(card(page, waterTitle)).toHaveCount(0);
   });
 
-  for (const { label, width } of [
-    { label: 'mobile', width: 390 },
-    { label: 'tablet', width: 768 },
-    { label: 'desktop', width: 1440 },
-  ]) {
-    test(`works at ${label} viewport without horizontal overflow`, async ({ page }) => {
-      await page.setViewportSize({ width, height: 900 });
-      await expect(page.getByTestId('habit-card')).toHaveCount(5);
-      const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
-      expect(scrollWidth).toBeLessThanOrEqual(width);
-      await expect(page.getByRole('heading', { name: 'عادت‌های من', level: 1 })).toBeVisible();
-    });
-  }
+  test('group members can record their own progress without managing the shared challenge', async ({ page }) => {
+    const title = 'چالش مطالعهٔ دوستان';
+    const habit = card(page, title);
+    await habit.getByRole('button', { name: `عملیات ${title}` }).click();
+    await expect(habit).toContainText('مدیریت چالش گروهی از بخش گروه‌ها');
+    await expect(habit.getByRole('button', { name: /ویرایش|حذف/ })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await checkIn(page, title).click();
+    await expect(checkIn(page, title)).toHaveAttribute('aria-pressed', 'true');
+    await expect(habit.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '40');
+  });
+
+  test('renders user-supplied HTML as text', async ({ page }) => {
+    await openAction(page, waterTitle, 'ویرایش');
+    const dialog = page.getByRole('dialog', { name: 'ویرایش عادت' });
+    const payload = '<img src=x onerror=alert(1)>';
+    await dialog.getByRole('textbox', { name: 'نام عادت' }).fill(payload);
+    await dialog.getByRole('button', { name: 'ذخیره تغییرات' }).click();
+    await expect(card(page, payload).getByRole('heading', { name: payload, exact: true })).toBeVisible();
+    await expect(card(page, payload).locator('[onerror]')).toHaveCount(0);
+  });
+
+  test('allows the daily check-in flow on a small phone', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(card(page, waterTitle)).toBeVisible();
+    await checkIn(page, waterTitle).click();
+    await expect(checkIn(page, waterTitle)).toHaveAttribute('aria-pressed', 'true');
+    await tab(page, /^همه/).click();
+    await expect(card(page, 'ورزش صبحگاهی')).toBeVisible();
+  });
 });

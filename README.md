@@ -1,33 +1,35 @@
 # Habitree Frontend
 
-Frontend for the Habitree habit-tracking project: React, TypeScript, Vite and Tailwind CSS.
+Habitree helps users build habits and follow their progress. The frontend uses React, TypeScript, Vite and Tailwind CSS.
 
-## Run locally
+## Getting started
+
+Requires Node.js 22 and npm.
 
 ```bash
 npm ci
 npm run dev
 ```
 
-The current feature branch `feat/my-habits` provides the **mock-only My Habits** screen at `http://localhost:5173/my-habits`. It does not need a Django backend for the preview. The three-dot menu exposes icon-only edit/delete actions; edit opens a temporary mock dialog, and delete requires confirmation. The three named botanical PNGs are bundled from `src/features/habits/assets/plants/` (bluebell/daisy/lavender); the earlier placeholder plant SVGs were removed. The Figma SVG UI icons and supplied PNG plants are bundled via static Vite imports, so missing assets are caught by the build. The action popup closes when clicking outside it or pressing Escape.
+Open the URL printed by Vite. The current My Habits implementation is available at `/my-habits`; `/` redirects to it. It uses in-memory demo data and does not require a backend. Changes are reset on refresh.
 
-## Quality checks
+## Development checks
 
 ```bash
+npx playwright install chromium
 npm run lint
 npm run build
 npm run test:e2e
 ```
 
-Playwright may require `npx playwright install chromium` on first use. CI runs the same checks. Failure artifacts are generated locally but intentionally ignored by Git.
+The Playwright configuration starts the development server and writes an HTML report to `playwright-report/`. GitHub Actions runs the frontend checks and uploads test artifacts. Do not commit local environment files, dependencies, build output or test reports.
 
 ## Documentation
 
-- [My Habits: full feature documentation, tests, acceptance criteria, results and limitations](docs/my-habits.md)
-- [Frontend Docker](docs/frontend-docker.md) — infrastructure guide retained from the existing project
+- [My Habits — functionality, architecture and integration](docs/my-habits.md)
+- [Frontend Docker](docs/frontend-docker.md)
+- [Design reference (Figma)](https://www.figma.com/design/XtaN3iBwuZM6Y2f7vfJVfC/Habitree?node-id=92-42458)
 
-## Merge and security
+## Contributing
 
-`feat/authentication` is a separate branch. Preserve its routes, shared components and styles during merge; see the merge section in the My Habits documentation. The mock screen is **not** protected by an auth guard yet and must not display real user data before authenticated routing and Django authorization are integrated. The Figma file is read-only.
-
-**My Habits mock UI:** deletion requires an accessible in-page confirmation dialog (no browser `window.confirm`); sorting uses a styled keyboard-accessible dropdown. See `docs/my-habits.md` for acceptance criteria.
+Create a feature or fix branch from `develop`, use Conventional Commits, and submit a pull request with passing checks and a review before merging.

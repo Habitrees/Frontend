@@ -42,7 +42,7 @@ export function EditHabitDialog({ habit, onSave, onDismiss }: EditHabitDialogPro
   return (
     <dialog ref={dialogRef} className="habit-edit-dialog" dir="rtl"
       aria-labelledby="edit-habit-title" aria-describedby="edit-habit-description"
-      onCancel={(event) => { event.preventDefault(); onDismiss(); }}>
+      onCancel={(event) => { event.preventDefault(); if (!isSubmitting) onDismiss(); }}>
       <h2 id="edit-habit-title">ویرایش عادت</h2>
       <p id="edit-habit-description">تغییرات فعلاً فقط در داده‌های آزمایشی ذخیره می‌شوند.</p>
       <form noValidate onSubmit={(event) => { void submit(event); }}>

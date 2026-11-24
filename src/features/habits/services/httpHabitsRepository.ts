@@ -2,12 +2,11 @@ import type { AxiosInstance } from 'axios';
 import type { Habit, RecordHabitInput, UpdateHabitInput } from '../types';
 import type { HabitsRepository } from './habitsRepository';
 
-/** Proposed integration interface; agree final routes/DTO with backend first. */
+/** Backend routes and DTO mapping must be agreed with the Django team. */
 export interface HabitsEndpoints {
   list: string;
   record: (habitId: string) => string;
   remove: (habitId: string) => string;
-  /** Provided by backend contract later; never hardcode a guessed route. */
   update: (habitId: string) => string;
 }
 

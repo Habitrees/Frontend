@@ -1,26 +1,43 @@
-/** Domain-facing types. Final Django response mapping must be agreed with backend. */
+/** Display contract for Habitree's personal and shared challenges.
+ * Django remains authoritative for scheduling, completion, streaks and plant stages.
+ */
 export type HabitPolarity = 'positive' | 'negative';
 export type HabitCadence = 'daily' | 'weekly' | 'monthly';
 export type StreakMode = 'strict' | 'flexible';
-export type TodayStatus = 'pending' | 'completed' | 'missed';
+export type TodayStatus = 'pending' | 'completed' | 'failed';
 export type HabitListStatus = 'active' | 'completed';
 export type HabitIcon = 'water' | 'study' | 'exercise' | 'mindfulness' | 'sleep';
 export type HabitMeasurement =
   | { type: 'binary' }
   | { type: 'count' | 'duration'; target: number; unit: string };
 
+export type HabitOwnership =
+  | { type: 'personal' }
+  | { type: 'group'; groupId: string; groupName: string };
+
 export interface Habit {
   id: string;
   title: string;
-  /** Short text shown under the title in the Figma card. */
   subtitle: string;
   polarity: HabitPolarity;
   cadence: HabitCadence;
   streakMode: StreakMode;
   measurement: HabitMeasurement;
-  today: { status: TodayStatus; value: number | null };
+  ownership: HabitOwnership;
+  /** A plan describes when a habit recurs. Mock-only fixtures generate due fields from it. */
+  schedule: { weekdays?: readonly number[]; monthDays?: readonly number[] };
+  today: {
+    date: string;
+    due: boolean;
+    canRecord: boolean;
+    /** 'pending' is NOT the same as explicit failure. */
+    status: TodayStatus;
+    nextDueDate: string | null;
+    isMakeup: boolean;
+  };
   stats: {
-    /** Render only: Django owns progress, streak and plant-stage calculations. */
+    successfulOccurrences: number;
+    plannedOccurrences: number;
     completionPercent: number;
     currentStreak: number;
     bestStreak: number;
@@ -28,19 +45,13 @@ export interface Habit {
   };
   status: HabitListStatus;
   icon: HabitIcon;
-  /** In visual order, Friday → Saturday. One item per day. */
-  weekCompletions: readonly boolean[];
-  /** Stable sorting field, supplied by backend after API integration. */
   createdAt: string;
 }
 
-/** Fields editable in the mock UI; stats/streaks remain backend-owned. */
-export interface UpdateHabitInput {
-  title: string;
-  subtitle: string;
-}
+export interface UpdateHabitInput { title: string; subtitle: string }
 
+/** Binary success/pending; no notes or partial amounts in the MVP. */
 export interface RecordHabitInput {
   date: string;
-  value: number;
+  status: 'completed' | 'pending';
 }

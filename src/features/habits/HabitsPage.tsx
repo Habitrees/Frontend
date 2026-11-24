@@ -1,7 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Plus, Sprout } from 'lucide-react';
+import { MotionConfig } from 'motion/react';
 import { Button } from '../../shared/components/Button';
-import { decorativeAssets } from './components/habitAssets';
+import { localDateKey } from './data/mockHabits';
 import { HabitCard } from './components/HabitCard';
+import { HabitCompletionFeedback, type CompletionFeedback } from './components/HabitCompletionFeedback';
 import { EditHabitDialog } from './components/EditHabitDialog';
 import { DeleteHabitDialog } from './components/DeleteHabitDialog';
 import { HabitFilters } from './components/HabitFilters';
@@ -12,154 +15,207 @@ import type { HabitsRepository } from './services/habitsRepository';
 import { mockHabitsRepository } from './services/mockHabitsRepository';
 import { filterAndSortHabits, paginateHabits, PAGE_SIZE } from './utils/habitFilters';
 import type { HabitSort, HabitStatusFilter } from './utils/habitFilters';
+import { celebrateHabitCompletion } from './utils/celebrateHabitCompletion';
 import './habits.css';
 
 export interface HabitsPageProps {
   repository?: HabitsRepository;
-  /** Host application should navigate to the create-habit page when available. */
+  /** The parent application will provide real navigation once creation flow is merged. */
   onCreateHabit?: () => void;
-  /** Host application should navigate to edit-habit page when available. */
   onEditHabit?: (habit: Habit) => void;
 }
 
+/** Replaces the former dashboard as the primary daily check-in screen. */
 export function HabitsPage({
   repository = mockHabitsRepository, onCreateHabit, onEditHabit,
 }: HabitsPageProps) {
-  const { habits, loading, error, deletingId, updatingId, reload, remove, update } = useHabits(repository);
-  const [query, setQuery] = useState('');
+  const { habits, loading, error, deletingId, updatingId, recordingId, reload, record, remove, update } = useHabits(repository);
   const [sort, setSort] = useState<HabitSort>('newest');
-  const [status, setStatus] = useState<HabitStatusFilter>('all');
+  const [status, setStatus] = useState<HabitStatusFilter>('today');
   const [page, setPage] = useState(1);
   const [menuId, setMenuId] = useState<string | null>(null);
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
   const [deletingHabit, setDeletingHabit] = useState<Habit | null>(null);
+  const [recordFeedback, setRecordFeedback] = useState<CompletionFeedback | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const dialogTriggerRef = useRef<HTMLElement | null>(null);
 
-  // Close on outside pointer interaction or keyboard focus, not only on Escape.
-  // The trigger and popup carry the same data marker so clicking either stays inside.
+  const restoreDialogFocus = () => {
+    requestAnimationFrame(() => {
+      const trigger = dialogTriggerRef.current;
+      if (trigger?.isConnected) trigger.focus();
+      else headingRef.current?.focus();
+    });
+  };
+  const rememberDialogTrigger = (habit: Habit) => {
+    const card = Array.from(document.querySelectorAll<HTMLElement>('[data-habit-menu-surface]'))
+      .find((surface) => surface.dataset.habitMenuSurface === habit.id);
+    dialogTriggerRef.current = card?.querySelector<HTMLElement>('.habit-menu-trigger') ?? null;
+  };
+
   useEffect(() => {
-    if (menuId === null) return;
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMenuId(null);
-    };
-    const handleOutsideInteraction = (event: PointerEvent | FocusEvent) => {
+    if (!menuId) return;
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') setMenuId(null); };
+    const outside = (event: PointerEvent | FocusEvent) => {
       const target = event.target;
-      // SVG descendants, icons and buttons in the same popup are inside.
-      // Any other area (including another card) dismisses this popup.
       if (target instanceof Element &&
-          target.closest('[data-habit-menu-surface]')?.getAttribute('data-habit-menu-surface') === menuId) return;
+        target.closest('[data-habit-menu-surface]')?.getAttribute('data-habit-menu-surface') === menuId) return;
       setMenuId(null);
     };
-
-    document.addEventListener('keydown', handleEscape);
-    document.addEventListener('pointerdown', handleOutsideInteraction);
-    document.addEventListener('focusin', handleOutsideInteraction);
+    document.addEventListener('keydown', escape);
+    document.addEventListener('pointerdown', outside);
+    document.addEventListener('focusin', outside);
     return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.removeEventListener('pointerdown', handleOutsideInteraction);
-      document.removeEventListener('focusin', handleOutsideInteraction);
+      document.removeEventListener('keydown', escape);
+      document.removeEventListener('pointerdown', outside);
+      document.removeEventListener('focusin', outside);
     };
   }, [menuId]);
 
+  useEffect(() => {
+    if (!recordFeedback) return;
+    const timeout = window.setTimeout(() => setRecordFeedback(null), 1700);
+    return () => window.clearTimeout(timeout);
+  }, [recordFeedback]);
+
   const counts = useMemo(() => ({
     all: habits.length,
-    active: habits.filter((habit) => habit.status === 'active').length,
-    completed: habits.filter((habit) => habit.status === 'completed').length,
+    today: habits.filter((item) => item.status === 'active' && item.today.due).length,
+    completed: habits.filter((item) => item.status === 'completed').length,
   }), [habits]);
-  const filtered = useMemo(() => filterAndSortHabits(habits, query, status, sort), [habits, query, status, sort]);
+  const doneToday = habits.filter((item) => item.status === 'active' && item.today.due && item.today.status === 'completed').length;
+  const filtered = useMemo(() => filterAndSortHabits(habits, status, sort), [habits, status, sort]);
   const maxPage = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const effectivePage = Math.min(page, maxPage);
-  const visibleHabits = paginateHabits(filtered, effectivePage);
-  const from = filtered.length === 0 ? 0 : (effectivePage - 1) * PAGE_SIZE + 1;
-  const to = Math.min(effectivePage * PAGE_SIZE, filtered.length);
-  const resetPage = () => { setPage(1); setMenuId(null); };
+  const currentPage = Math.min(page, maxPage);
+  const displayed = paginateHabits(filtered, currentPage);
+  const from = filtered.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0;
+  const to = Math.min(currentPage * PAGE_SIZE, filtered.length);
+  const changeFilter = () => { setPage(1); setMenuId(null); setRecordFeedback(null); };
 
-  const handleConfirmDelete = async () => {
+  const confirmDelete = async () => {
     if (!deletingHabit) return;
-    const deleted = await remove(deletingHabit.id);
-    if (deleted) setDeletingHabit(null);
+    if (await remove(deletingHabit.id)) { setDeletingHabit(null); restoreDialogFocus(); }
   };
 
-  const handleSaveEdit = async (input: UpdateHabitInput): Promise<boolean> => {
-    if (!editingHabit) return false;
-    return update(editingHabit.id, input);
+  const saveEdit = async (input: UpdateHabitInput): Promise<boolean> =>
+    editingHabit ? update(editingHabit.id, input) : false;
+
+  const toggleCompletion = async (habit: Habit) => {
+    if (recordingId || !habit.today.canRecord || habit.status === 'completed') return;
+    const completed = habit.today.status !== 'completed';
+    setRecordFeedback(null);
+    if (await record(habit.id, {
+      date: habit.today.date,
+      status: completed ? 'completed' : 'pending',
+    })) {
+      const allDone = completed && habit.today.due && counts.today > 0 && doneToday + 1 === counts.today;
+      setRecordFeedback({
+        habitId: habit.id,
+        completed,
+        title: allDone ? 'آفرین! همهٔ عادت‌های امروزت انجام شد' : 'آفرین، یک قدم دیگه!',
+        message: completed
+          ? `انجام ${habit.title} ثبت شد.`
+          : `ثبت انجام ${habit.title} لغو شد.`,
+      });
+      if (completed) void celebrateHabitCompletion();
+    }
   };
 
-  return (
-    <div className="habits-page font-sans" dir="ltr">
-      <div className="application">
-        <HabitsHeader />
-        <main className="page-content">
-          <section className="intro" aria-labelledby="my-habits-title">
-            <Button className="new-habit" variant="brand" type="button" onClick={() => {
-              if (onCreateHabit) onCreateHabit();
-              else setNotice('صفحه افزودن عادت هنوز به این مسیر متصل نشده است.');
-            }}>
-              <img src={decorativeAssets.newHabitArrow} alt="" aria-hidden="true" />
-              <span className="desktop-button-label">عادت جدید</span>
-              <span className="mobile-button-label">افزودن عادت جدید</span>
-            </Button>
-            <div className="intro-copy" dir="rtl">
-              <h1 id="my-habits-title">عادت‌های من</h1>
-              <p>هر عادت، یک فرصت تازه برای رشد توست.</p>
+  return <MotionConfig reducedMotion="user">
+  <div className="habits-page font-sans" dir="rtl">
+    <div className="application">
+      <HabitsHeader />
+      <main className="page-content">
+        <section className="welcome-panel" aria-label="خوشامدگویی">
+          <div>
+            <p className="welcome-headline"><Sprout size={23} aria-hidden="true" />سلام، روزت سبز!</p>
+            <p>هر عادت کوچک، تو را یک قدم به رشد نزدیک‌تر می‌کند.</p>
+          </div>
+          <svg className="welcome-botanical" viewBox="0 0 160 108" aria-hidden="true" focusable="false">
+            <path d="M13 102C48 78 65 38 133 13" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+            <g fill="currentColor" opacity=".82">
+              <path d="M40 77C17 74 19 53 24 43C37 49 47 61 40 77Z" />
+              <path d="M49 69C67 48 87 58 97 61C82 74 66 77 49 69Z" />
+              <path d="M66 48C48 40 53 20 62 10C73 20 78 34 66 48Z" />
+              <path d="M78 40C99 20 116 26 128 29C115 42 95 48 78 40Z" />
+              <path d="M105 25C110 7 130 2 147 6C138 22 122 30 105 25Z" />
+              <path d="M24 91C10 86 5 74 7 65C23 69 31 79 24 91Z" />
+            </g>
+          </svg>
+          <time dateTime={localDateKey(new Date())}>
+            {new Intl.DateTimeFormat('fa-IR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date())}
+          </time>
+        </section>
+
+        <section className="intro" aria-labelledby="my-habits-title">
+          <div className="intro-copy">
+            <h1 ref={headingRef} tabIndex={-1} id="my-habits-title">عادت‌های من</h1>
+            <p>بررسی و انجام سریع عادت‌های امروز، تنها با یک کلیک.</p>
+          </div>
+          <Button className="new-habit" variant="brand" type="button" onClick={() => {
+            if (onCreateHabit) onCreateHabit();
+            else setNotice('ساخت عادت جدید بعد از اتصال جریان ساخت عادت فعال می‌شود.');
+          }}>
+            <Plus size={19} aria-hidden="true" /> عادت جدید
+          </Button>
+        </section>
+
+        <HabitFilters sort={sort} status={status} counts={counts}
+          onSortChange={(value) => { setSort(value); changeFilter(); }}
+          onStatusChange={(value) => { setStatus(value); changeFilter(); }} />
+
+        <HabitCompletionFeedback feedback={recordFeedback} />
+        {(notice || error) && <div role={error ? 'alert' : 'status'} className="page-notice">
+          <p>{error || notice}</p>
+          {error && <Button variant="brand" type="button" onClick={() => { void reload(); }}>تلاش دوباره</Button>}
+          {notice && <button type="button" onClick={() => setNotice(null)}>بستن</button>}
+        </div>}
+
+        {loading ? <p className="page-state" role="status">در حال دریافت عادت‌ها…</p> : <>
+          <section className="habit-list-section" aria-labelledby="habits-list-title">
+            <h2 id="habits-list-title" className="sr-only">{status === 'today' ? 'عادت‌های امروز' : status === 'completed' ? 'دوره‌های تکمیل‌شده' : 'همهٔ عادت‌ها'}</h2>
+            <div className="habit-list">
+            {displayed.map((habit) => <HabitCard key={habit.id} habit={habit} view={status}
+              menuOpen={menuId === habit.id}
+              moving={recordFeedback?.habitId === habit.id && recordFeedback.completed}
+              busy={recordingId === habit.id || deletingId === habit.id || updatingId === habit.id}
+              onToggleMenu={() => setMenuId((previous) => previous === habit.id ? null : habit.id)}
+              onCloseMenu={() => setMenuId(null)}
+              recordDisabled={recordingId !== null}
+              onToggleComplete={() => { void toggleCompletion(habit); }}
+              onEdit={() => {
+                setMenuId(null);
+                if (onEditHabit) onEditHabit(habit);
+                else { rememberDialogTrigger(habit); setEditingHabit(habit); }
+              }}
+              onDelete={() => { rememberDialogTrigger(habit); setMenuId(null); setDeletingHabit(habit); }} />)}
+            {!displayed.length && <p className="page-state" role="status">
+              {status === 'today' && !counts.today
+                ? 'برای امروز عادتی برنامه‌ریزی نشده؛ از تب «همه» می‌تونی نوبت‌های بعدی رو ببینی.'
+                : status === 'completed' && !counts.completed
+                  ? 'هنوز چالش تکمیل‌شده‌ای نداری.'
+                  : 'عادتی برای این بخش وجود ندارد.'}
+            </p>}
             </div>
           </section>
+          {maxPage > 1 && <nav className="list-footer" aria-label="صفحه‌بندی عادت‌ها">
+            <Button variant="brand" type="button" disabled={currentPage <= 1}
+              onClick={() => { setPage((previous) => Math.max(1, previous - 1)); setMenuId(null); }}>قبلی</Button>
+            <span aria-live="polite">نمایش {from.toLocaleString('fa-IR')} تا {to.toLocaleString('fa-IR')} از {filtered.length.toLocaleString('fa-IR')}</span>
+            <Button variant="brand" type="button" disabled={currentPage >= maxPage}
+              onClick={() => { setPage((previous) => Math.min(maxPage, previous + 1)); setMenuId(null); }}>بعدی</Button>
+          </nav>}
+        </>}
 
-          <HabitFilters query={query} sort={sort} status={status} counts={counts}
-            onQueryChange={(value) => { setQuery(value); resetPage(); }}
-            onSortChange={(value) => { setSort(value); resetPage(); }}
-            onStatusChange={(value) => { setStatus(value); resetPage(); }} />
-
-          {(notice || error) && (
-            <div role={error ? 'alert' : 'status'} className="page-notice">
-              <p>{error || notice}</p>
-              {error && <button type="button" onClick={() => { void reload(); }}>تلاش دوباره</button>}
-              {notice && <button type="button" onClick={() => setNotice(null)}>بستن</button>}
-            </div>
-          )}
-
-          {loading ? (
-            <p className="page-state" role="status">در حال دریافت عادت‌ها…</p>
-          ) : (
-            <>
-              <section className="habit-list" aria-label="فهرست عادت‌ها">
-                {visibleHabits.map((habit) => (
-                  <HabitCard key={habit.id} habit={habit}
-                    menuOpen={menuId === habit.id}
-                    busy={deletingId === habit.id || updatingId === habit.id}
-                    onToggleMenu={() => setMenuId((previous) => previous === habit.id ? null : habit.id)}
-                    onCloseMenu={() => setMenuId(null)}
-                    onEdit={() => {
-                      setMenuId(null);
-                      if (onEditHabit) onEditHabit(habit);
-                      else setEditingHabit(habit);
-                    }}
-                    onDelete={() => { setMenuId(null); setDeletingHabit(habit); }} />
-                ))}
-                {visibleHabits.length === 0 && (
-                  <p className="page-state" role="status">{habits.length ? 'عادتی مطابق جست‌وجو یا فیلتر پیدا نشد.' : 'هنوز عادتی ثبت نکرده‌ای.'}</p>
-                )}
-              </section>
-              <footer className="list-footer" aria-label="صفحه‌بندی عادت‌ها">
-                <button type="button" disabled={effectivePage >= maxPage} onClick={() => { setPage((p) => Math.min(maxPage, p + 1)); setMenuId(null); }}>بعدی</button>
-                <button type="button" disabled={effectivePage <= 1} onClick={() => { setPage((p) => Math.max(1, p - 1)); setMenuId(null); }}>قبلی</button>
-                <span aria-live="polite" dir="rtl">نمایش {to.toLocaleString('fa-IR')} عادت از {filtered.length.toLocaleString('fa-IR')} عادت{from > 1 ? ` (از ${from.toLocaleString('fa-IR')})` : ''}</span>
-              </footer>
-            </>
-          )}
-          {deletingHabit && (
-            <DeleteHabitDialog key={deletingHabit.id} habit={deletingHabit}
-              busy={deletingId === deletingHabit.id} error={error}
-              onConfirm={handleConfirmDelete} onDismiss={() => setDeletingHabit(null)} />
-          )}
-          {editingHabit && (
-            <EditHabitDialog key={editingHabit.id} habit={editingHabit}
-              onSave={handleSaveEdit} onDismiss={() => setEditingHabit(null)} />
-          )}
-        </main>
-        <HabitsMobileNavigation />
-      </div>
+        {deletingHabit && <DeleteHabitDialog key={deletingHabit.id} habit={deletingHabit}
+          busy={deletingId === deletingHabit.id} error={error}
+          onConfirm={confirmDelete} onDismiss={() => { setDeletingHabit(null); restoreDialogFocus(); }} />}
+        {editingHabit && <EditHabitDialog key={editingHabit.id} habit={editingHabit}
+          onSave={saveEdit} onDismiss={() => { setEditingHabit(null); restoreDialogFocus(); }} />}
+      </main>
+      <HabitsMobileNavigation />
     </div>
-  );
+  </div>
+  </MotionConfig>;
 }

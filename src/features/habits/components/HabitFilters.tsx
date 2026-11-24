@@ -1,43 +1,31 @@
-import { Input } from '../../../shared/components/Input';
+import { CalendarDays, Layers, CircleCheck } from 'lucide-react';
 import { HabitSortDropdown } from './HabitSortDropdown';
 import type { HabitSort, HabitStatusFilter } from '../utils/habitFilters';
 
 interface HabitFiltersProps {
-  query: string;
   sort: HabitSort;
   status: HabitStatusFilter;
-  counts: { all: number; active: number; completed: number };
-  onQueryChange: (query: string) => void;
+  counts: { all: number; today: number; completed: number };
   onSortChange: (sort: HabitSort) => void;
   onStatusChange: (status: HabitStatusFilter) => void;
 }
 
-export function HabitFilters({ query, sort, status, counts, onQueryChange, onSortChange, onStatusChange }: HabitFiltersProps) {
-  const tabs: { value: HabitStatusFilter; label: string; count: number }[] = [
-    { value: 'completed', label: 'تکمیل‌شده', count: counts.completed },
-    { value: 'active', label: 'فعال', count: counts.active },
-    { value: 'all', label: 'همه', count: counts.all },
-  ];
+export function HabitFilters({ sort, status, counts, onSortChange, onStatusChange }: HabitFiltersProps) {
+  const tabs = [
+    { value: 'today', label: 'امروز', icon: CalendarDays },
+    { value: 'all', label: 'همه', icon: Layers },
+    { value: 'completed', label: 'تکمیل‌شده', icon: CircleCheck },
+  ] as const;
 
-  return (
-    <>
-      <div className="filters" dir="ltr">
-        <HabitSortDropdown value={sort} onChange={onSortChange} />
-        <div className="search-control" dir="rtl">
-          <Input id="habits-search" label="جست‌وجوی عادت" type="search"
-            autoComplete="off" value={query} onChange={(e) => onQueryChange(e.target.value)}
-            placeholder="نام عادت را بنویس…" />
-        </div>
-      </div>
-      <div className="tabs" role="group" aria-label="فیلتر وضعیت عادت‌ها">
-        {tabs.map(({ value, label, count }) => (
-          <button key={value} type="button" aria-pressed={status === value}
-            className={status === value ? 'selected' : ''}
-            onClick={() => onStatusChange(value)}>
-            {label} ({count.toLocaleString('fa-IR')})
-          </button>
-        ))}
-      </div>
-    </>
-  );
+  return <div className="habit-navigation">
+    <div className="tabs" dir="rtl" role="group" aria-label="نمایش عادت‌ها">
+      {tabs.map(({ value, label, icon: Icon }) => <button type="button" key={value}
+        aria-pressed={value === status} className={value === status ? 'selected' : ''}
+        onClick={() => onStatusChange(value)}>
+        <Icon size={18} aria-hidden="true" />
+        <span>{label}</span><span className="tab-count">{counts[value].toLocaleString('fa-IR')}</span>
+      </button>)}
+    </div>
+    <div className="habit-sort-row"><HabitSortDropdown value={sort} onChange={onSortChange} /></div>
+  </div>;
 }
